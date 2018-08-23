@@ -1,0 +1,32 @@
+
+T25E0 000:267 SEGGER J-Link V6.16j Log File (0001ms, 0066ms total)
+T25E0 000:267 DLL Compiled: Jul 24 2017 18:42:23 (0001ms, 0066ms total)
+T25E0 000:267 Logging started @ 2018-06-12 10:35 (0001ms, 0066ms total)
+T25E0 000:268 JLINK_SetWarnOutHandler(...) (0000ms, 0066ms total)
+T25E0 000:268 JLINK_OpenEx(...)
+Firmware: J-Link ARM V8 compiled Jan 31 2018 18:34:52
+Hardware: V8.00
+S/N: 20080643
+Feature(s): RDI,FlashDL,FlashBP,JFlash,GDBFull
+TELNET listener socket opened on port 19021WEBSRV 
+Webserver running on local port 19080  returns O.K. (0020ms, 0086ms total)
+T25E0 000:288 JLINK_SetErrorOutHandler(...) (0000ms, 0086ms total)
+T25E0 000:288 JLINK_ExecCommand("ProjectFile = "E:\0 当前工作\孙志海\1-植物造型扫描\4-软件设计 - 编码器\USER\JLinkSettings.ini"", ...). d:\Program Files (x86)\SEGGER\JLink_V616j\JLinkDevices.xml evaluated successfully.  returns 0x00 (0147ms, 0233ms total)
+T25E0 000:435 JLINK_ExecCommand("Device = STM32F407VETx", ...). Device "STM32F407VE" selected.  returns 0x00 (0002ms, 0235ms total)
+T25E0 000:437 JLINK_ExecCommand("DisableConnectionTimeout", ...).   returns 0x01 (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetDLLVersion()  returns 61610 (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetFirmwareString(...) (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetDLLVersion()  returns 61610 (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetCompileDateTime() (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetFirmwareString(...) (0000ms, 0235ms total)
+T25E0 000:437 JLINK_GetHardwareVersion()  returns 0x13880 (0000ms, 0235ms total)
+T25E0 000:437 JLINK_TIF_Select(JLINKARM_TIF_JTAG)  returns 0x00 (0004ms, 0239ms total)
+T25E0 000:441 JLINK_SetSpeed(5000) (0000ms, 0239ms total)
+T25E0 000:442 JLINK_SetResetType(JLINKARM_RESET_TYPE_NORMAL)  returns JLINKARM_RESET_TYPE_NORMAL (0000ms, 0239ms total)
+T25E0 000:442 JLINK_Reset()JLINK_GetIdData(...) (0001ms, 0240ms total)
+T25E0 000:443 JLINK_GetIdData(...) (0000ms, 0240ms total)
+T25E0 000:447 JLINK_GetFirmwareString(...) (0000ms, 0240ms total)
+T25E0 212:735 JLINK_Close() (0013ms, 0253ms total)
+T25E0 212:735  (0013ms, 0253ms total)
+T25E0 212:735 Closed (0013ms, 0253ms total)
