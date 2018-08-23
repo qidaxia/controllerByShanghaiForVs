@@ -7,22 +7,28 @@
 #include "led.h"
 #include "beep.h"
 #include "timer3.h"
-#include "main.h"
 #include "rtc.h"
 #include "design.h"
+#include "init_Parameter.h"
 
 uint8_t DebugFlag;		 //调试模式
 uint8_t WorkStatus;      //工作状态
 uint8_t BreakFlag;       //中断执行标志
 uint8_t  PCBreakFlag;	 //上位机终止当前任务
 
-
 uint8_t paulseStyle;					//脉冲输出方式
-
 uint16_t Scan_Interval;					//扫描时间间隔，单位分钟
 uint16_t Scan_Times;					//当日扫描次数
 uint8_t  Scan_SW;						//任务扫描开关
 uint8_t	 Scan_Day;						//扫描日期，日期变化，扫描次数清零
+
+RTC_TimeTypeDef RTC_TimeStruct;
+RTC_DateTypeDef RTC_DateStruct;
+
+volatile MOVECMD XiaoChe_Now_Direction;	//0x01向前、0x02向后，0x03停止
+volatile uint32_t XiaoChe_Now_Position;
+volatile MOVECMD DaLiang_Now_Direction;	//0x01向前、0x02向后，0x03停止
+volatile uint32_t DaLiang_Now_Position;
 
 
 
@@ -31,7 +37,7 @@ uint8_t	 Scan_Day;						//扫描日期，日期变化，扫描次数清零
 RTC_BKP_DR0		RTC初始化标志，如果=0x5050表示已经初始化过了
 */
 
-void init_Parameter(void)
+extern void init_Parameter(void)
 {
 	uint8_t rd_buf[50],i;
 	

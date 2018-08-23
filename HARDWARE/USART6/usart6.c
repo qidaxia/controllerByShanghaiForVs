@@ -1,10 +1,8 @@
 #include "timer3.h"
 #include "usart6.h"	
-#include "main.h"
-#include "delay.h"
 #include "delay.h"
 
-uint8_t Usart6_rcv_buf[USART6_RCV_LEN];     //接收缓冲,最大USART_RCV_LEN个字节.
+uint8_t USART6_RX_BUF[USART6_RCV_LEN];     //接收缓冲,最大USART_RCV_LEN个字节.
 uint8_t Usart6_rcv_index;
 
 //串口6发送
@@ -71,7 +69,7 @@ void USART6_IRQHandler(void)
 	if(USART_GetITStatus(USART6, USART_IT_RXNE) != RESET)  //接收中断
 	{
 		Res =USART_ReceiveData(USART6);//(USART6->DR);	//读取接收到的数据
-		Usart6_rcv_buf[Usart6_rcv_index++] = Res;
+		USART6_RX_BUF[Usart6_rcv_index++] = Res;
 		if(Usart6_rcv_index>=USART6_RCV_LEN) Usart6_rcv_index = 0;
 	} 
 } 

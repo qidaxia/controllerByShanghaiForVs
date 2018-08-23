@@ -1,6 +1,5 @@
 #include "timer3.h"
 #include "usart3.h"	
-#include "main.h"
 
 uint8_t  Usart3_rcv_flag;		//串口3接收到数据
 

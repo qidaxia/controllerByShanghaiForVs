@@ -435,11 +435,6 @@
               <FilePath>.\PlanTask.c</FilePath>
             </File>
             <File>
-              <FileName>Test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Test.c</FilePath>
-            </File>
-            <File>
               <FileName>toSensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\toSensor.c</FilePath>

@@ -6,7 +6,7 @@
 
 #define USART6_RCV_LEN  			30  	//定义最大接收字节数 20
 
-extern uint8_t Usart6_rcv_buf[USART6_RCV_LEN];     //接收缓冲
+extern uint8_t USART6_RX_BUF[USART6_RCV_LEN];     //接收缓冲
 extern uint8_t Usart6_rcv_index;
 
 void usart6_init(u32 bound);

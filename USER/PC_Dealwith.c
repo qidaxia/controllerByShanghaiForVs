@@ -4,23 +4,23 @@
 
 */
 #include "delay.h"
-#include "usart1.h"
 #include "usart2.h"
-#include "usart3.h"
 #include "uart5.h"
 #include "led.h"
 #include "beep.h"
 #include "timer3.h"
-#include "main.h"
 #include "rtc.h"
 #include "adc.h"
 #include "design.h"
-
+#include "PC_Dealwith.h"
+#include "init_Parameter.h"
+#include "toSensor.h"
+#include "PlanTask.h"
 
 /*
 向计算机发送控制器配置数据
 */
-void SendConfig(uint8_t com)
+extern void SendConfig(uint8_t com)
 {
 	uint8_t send_buf[50];
 
@@ -66,8 +66,9 @@ void SendConfig(uint8_t com)
 	SendBuff((DEVICE)com, cmdEnd, 3);
 }
 
+
 //单片机反馈 0x00:成功执行,0x01:扫描任务开始,0x02:扫描任务结束,0x03:未能正确执行
-void SendBack(uint8_t com, ECHO echoCode)
+extern void SendBack(uint8_t com, ECHO echoCode)
 {
 	u8 echoBuf[2] = { 0x0B,0x00 };
 	echoBuf[1] = echoCode;
@@ -78,9 +79,10 @@ void SendBack(uint8_t com, ECHO echoCode)
 	SendBuff((DEVICE)com, cmdEnd, 3);
 }
 
-#define BAT_THRESHOLD   220 //低于2.2V报警
+
+
 /*  发送纽扣电池电压值  */
-void SendBatteryVoltage(uint8_t com)
+extern void SendBatteryVoltage(uint8_t com)
 {
 	u16 adc_value, bat1000;
 	u8 bat_low;
@@ -105,7 +107,7 @@ void SendBatteryVoltage(uint8_t com)
 /*
 发送坐标数值
 */
-void SendBackValue(uint8_t com, uint32_t d)
+extern void SendBackValue(uint8_t com, uint32_t d)
 {
 	u8 tempBuf[5] = { 0x0A };
 	tempBuf[1] = d;
@@ -119,10 +121,11 @@ void SendBackValue(uint8_t com, uint32_t d)
 }
 
 
+
 /* ------------------------------------------------------------------------------
 WIFI数据处理
 ------------------------------------------------------------------------------ */
-uint8_t WIFI_Dealwith(DEVICE com)
+extern uint8_t WIFI_Dealwith(DEVICE com)
 {
 	uint8_t rcv_buf[UART5_REC_LEN], i, j;
 	uint8_t write_ram_buf[50];
@@ -238,36 +241,36 @@ uint8_t WIFI_Dealwith(DEVICE com)
 			switch (rcv_buf[6])
 			{
 			case 0x00://前进（小车前进，Y变大）
-				if (MotorMove(ID_XIAOCHE, 0x01))
+				if (MotorMove(ID_XIAOCHE, forward))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x01://后退（小车后退，Y变小）
-				if (MotorMove(ID_XIAOCHE, 0x02))
+				if (MotorMove(ID_XIAOCHE, back))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x02://左（大梁后退，X变小）
-				if (MotorMove(ID_DALIANG, 0x02))
+				if (MotorMove(ID_DALIANG, back))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x03://右（大梁前进，X变大）
-				if (MotorMove(ID_DALIANG, 0x01))
+				if (MotorMove(ID_DALIANG, forward))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x04://停止（大梁小车全部停止）
-				i = MotorMove(ID_XIAOCHE, 0x03);
-				j = MotorMove(ID_DALIANG, 0x03);
+				i = MotorMove(ID_XIAOCHE, stop);
+				j = MotorMove(ID_DALIANG, stop);
 				if ((i + j) < 2)
 					SendBack(com, IS_ERROR);
 				else
@@ -303,21 +306,21 @@ uint8_t WIFI_Dealwith(DEVICE com)
 				break;
 
 			case 0x0A://大梁电机高速
-				if (ChangeSpeed(0x02))
+				if (ChangeSpeed(highSpeed))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x0B://大梁电机中速
-				if (ChangeSpeed(0x01))
+				if (ChangeSpeed(middleSpeed))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x0C://大梁电机低速
-				if (ChangeSpeed(0x00))
+				if (ChangeSpeed(lowSpeed))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
@@ -364,22 +367,22 @@ uint8_t WIFI_Dealwith(DEVICE com)
 		case 0x0B:
 			paulseStyle = rcv_buf[6];//脉冲输出方式
 			scanStartTime.Hour = rcv_buf[7];				//起始时间：时
-			scanStartTime.Minute = rcv_buf[8];			//起始时间：分
+			scanStartTime.Minute = rcv_buf[8];				//起始时间：分
 			scanStopTime.Hour = rcv_buf[9];					//结束时间：时
 			scanStopTime.Minute = rcv_buf[10];				//结束时间：分
 			Scan_Interval = rcv_buf[11] + (rcv_buf[12] << 8); //扫描时间间隔
 			scanRepeatStyle = (ScanRepeatStyle)rcv_buf[15];	//扫描重复方式
 
-			write_ram_buf[0] = paulseStyle; //脉冲输出方式
-			write_ram_buf[1] = scanStartTime.Hour;	//起始时间：时
+			write_ram_buf[0] = paulseStyle;					//脉冲输出方式
+			write_ram_buf[1] = scanStartTime.Hour;			//起始时间：时
 			write_ram_buf[2] = scanStartTime.Minute;       //起始时间：分
 			write_ram_buf[3] = scanStopTime.Hour;           //结束时间：时
 			write_ram_buf[4] = scanStopTime.Minute;         //结束时间：分
-			write_ram_buf[5] = rcv_buf[11];	      //扫描时间间隔
+			write_ram_buf[5] = rcv_buf[11];					 //扫描时间间隔
 			write_ram_buf[6] = rcv_buf[12];
 			write_ram_buf[7] = rcv_buf[13];
 			write_ram_buf[8] = rcv_buf[14];
-			write_ram_buf[9] = rcv_buf[15];        //扫描重复方式
+			write_ram_buf[9] = rcv_buf[15];					//扫描重复方式
 			write_to_backup_sram(write_ram_buf, 10, 67); //写入数据RAM
 			SendBack(com, IS_OK);
 			break;
@@ -396,7 +399,6 @@ uint8_t WIFI_Dealwith(DEVICE com)
 		case 0x04:
 			SendBatteryVoltage(com);
 			break;
-
 			//读取调试数据
 		case 0x05:
 
@@ -417,7 +419,7 @@ uint8_t WIFI_Dealwith(DEVICE com)
 /* ------------------------------------------------------------------------------
 WIFI数据处理,只响应紧急停止命令
 ------------------------------------------------------------------------------ */
-uint8_t WIFI_Stop(uint8_t com)
+extern uint8_t WIFI_Stop(uint8_t com)
 {
 	uint8_t rcv_buf[UART5_REC_LEN], i, j;
 	uint8_t write_ram_buf[10];
@@ -457,8 +459,8 @@ uint8_t WIFI_Stop(uint8_t com)
 			switch (rcv_buf[6])
 			{
 			case 0x04://停止（大梁小车全部停止）
-				i = MotorMove(ID_XIAOCHE, 0x03);
-				j = MotorMove(ID_DALIANG, 0x03);
+				i = MotorMove(ID_XIAOCHE, stop);
+				j = MotorMove(ID_DALIANG, stop);
 				if ((i + j) < 2)
 					SendBack(com, IS_ERROR);
 				else
@@ -466,7 +468,7 @@ uint8_t WIFI_Stop(uint8_t com)
 				break;
 
 			case 0x0A://大梁电机高速
-				if (ChangeSpeed(0x02))
+				if (ChangeSpeed(highSpeed))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
@@ -474,14 +476,14 @@ uint8_t WIFI_Stop(uint8_t com)
 				break;
 
 			case 0x0B://大梁电机中速
-				if (ChangeSpeed(0x01))
+				if (ChangeSpeed(middleSpeed))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
 				break;
 
 			case 0x0C://大梁电机低速
-				if (ChangeSpeed(0x00))
+				if (ChangeSpeed(lowSpeed))
 					SendBack(com, IS_OK);
 				else
 					SendBack(com, IS_ERROR);
@@ -496,13 +498,13 @@ uint8_t WIFI_Stop(uint8_t com)
 /* ------------------------------------------------------------------------------
 判断是否存在上位机中止指令,返回1终止扫描
 ------------------------------------------------------------------------------ */
-uint8_t PC_Stop(void)
+extern uint8_t PC_Stop(void)
 {
 	//1-处理串口WIFI通信
 	if (Usart2_rcv_flag)
 	{
 		Usart2_rcv_flag = 0;
-		WIFI_Stop(2);
+		WIFI_Stop(wifi);
 		return 1;
 	}
 
@@ -510,8 +512,22 @@ uint8_t PC_Stop(void)
 	if (Uart5_rcv_flag)
 	{
 		Uart5_rcv_flag = 0;
-		WIFI_Stop(5);
+		WIFI_Stop(networkModul);
 		return 1;
 	}
 	return 0;
+}
+
+extern uint8_t Is_PCStop(DEVICE com)
+{
+	uint8_t cmd = 0xff;
+	getCmdFrame(com, &cmd);
+	if (cmd == 0x05)//0x0D,0x04
+	{
+		DebugMsg("上位机终止等待\r\n");
+		PCBreakFlag = 1;
+		return 1;
+	}
+	return 0;
+
 }

@@ -1,7 +1,7 @@
 #include "rtc.h"
 #include "led.h"
 #include "delay.h"
-#include "main.h"
+
 
 //RTC时间设置
 //hour,min,sec:小时,分钟,秒钟

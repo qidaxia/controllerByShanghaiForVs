@@ -8,10 +8,11 @@
 #include "led.h"
 #include "beep.h"
 #include "timer3.h"
-#include "main.h"
 #include "rtc.h"
 #include "adc.h"
 #include "design.h"
+#include "toSensor.h"
+
 uint32_t x = 0;
 void Test(void)
 {

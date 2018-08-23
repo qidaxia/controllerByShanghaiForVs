@@ -5,7 +5,69 @@
 #include "usart2.h"
 #include "usart6.h"
 #include "delay.h"
-#include "main.h"
+#include "rtc.h"
+
+//和PC通信配置相关函数
+#define	COMM_HEAD1	0x73	//start
+#define	COMM_HEAD2	0x74
+#define	COMM_HEAD3	0x61
+#define	COMM_HEAD4	0x72
+#define	COMM_HEAD5	0x74
+#define COMM_END1	0x65	//end
+#define COMM_END2	0x6E
+#define COMM_END3	0x64
+#define ID_XIAOCHE	100
+#define ID_DALIANG  200
+#define ID_DEBUG		300
+#define BASEADDR_ROW	500
+#define BASEADDR_COL_FIRST	59
+#define BASEADDR_COL_LAST	63
+#define BASEADDR_COLUMN_BIT	100
+
+#define PRECISION	30		//30个脉冲误差
+#define DALIANG_TIMEOUT	600		//大梁运动超时
+#define XIAOCHE_TIMEOUT 200		//小车运动超时
+//植物扫描配置相关参数
+#define CAMERATIME	1							//按位扫描相机暂停时间
+
+
+typedef enum
+{
+	lora = 6,
+	wifi = 2,
+	usb = 1,
+	networkModul = 5,
+}DEVICE;
+
+typedef enum
+{
+	IS_OK = 0x00,
+	IS_START,
+	IS_END,
+	IS_ERROR,
+}ECHO;
+
+typedef enum
+{
+	lowSpeed,
+	middleSpeed,
+	highSpeed,
+}SPEED;
+
+typedef enum
+{
+	RET_ERR = 0X00,
+	RET_OK = 0X01,
+}RETCODE;
+
+
+typedef enum
+{
+	forward = 0x01,
+	back,
+	stop,
+	toZeroIng,
+}MOVECMD;
 
 typedef struct
 {
@@ -60,34 +122,6 @@ typedef enum
 extern ScanRepeatStyle scanRepeatStyle;				//扫描重复方式
 
 
-typedef enum
-{
-	lora = 6,
-	wifi = 2,
-	usb = 1,
-	networkModul = 5,
-}DEVICE;
-
-typedef enum
-{
-	IS_OK = 0x00,
-	IS_START,
-	IS_END,
-	IS_ERROR,
-}ECHO;
-
-typedef enum
-{
-	lowSpeed,
-	middleSpeed,
-	highSpeed,
-}SPEED;
-
-typedef enum
-{
-	RET_ERR = 0X00,
-	RET_OK = 0X01,
-}RETCODE;
 
 
 extern u8 cmdStart[5];
@@ -99,13 +133,18 @@ extern u8 cmdIdDebug[3];
 extern void loraInit(void);
 extern void wifiInit(void);
 extern void SendBuff(DEVICE device, u8 *buf, u8 len);
-extern void loraClear(void);
-extern void wifiClear(void);
-
 
 
 extern void DebugMsg(uint8_t *str);
 extern void DebugNum(uint32_t num);
 extern int fputc(int ch, FILE *f);
+
+
+extern u8 getReciveLen(DEVICE com);
+
+extern void clearReciveBuf(DEVICE com);
+extern uint8_t * getCmdFrame(DEVICE com, uint8_t *cmd);
+extern void handlerFrameTest(DEVICE com);
+extern void handlerFrame(DEVICE com);
 
 #endif // !DESINGE_H

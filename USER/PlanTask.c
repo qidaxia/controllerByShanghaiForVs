@@ -1,19 +1,19 @@
 #include "delay.h"
-#include "usart1.h"
 #include "usart2.h"
-#include "usart3.h"
-#include "uart5.h"
 #include "usart6.h"
 #include "led.h"
 #include "beep.h"
 #include "timer3.h"
-#include "main.h"
 #include "rtc.h"
-#include "main.h"
 #include "design.h"
+#include "PlanTask.h"
+#include "PC_Dealwith.h"
+#include "init_Parameter.h"
+#include "toSensor.h"
+
 
 /* 求整型数绝对值 */
-uint32_t abs_int(uint32_t a, uint32_t b)
+static uint32_t abs_int(uint32_t a, uint32_t b)
 {
 	if (a >= b)
 		return a - b;
@@ -21,16 +21,16 @@ uint32_t abs_int(uint32_t a, uint32_t b)
 		return b - a;
 }
 /* 判断是否到达指定位置 */
-uint8_t deviceInThere(uint32_t ID, uint32_t there)
+static uint8_t deviceInThere(uint32_t ID, uint32_t there)
 {
-	uint8_t dir;
+	MOVECMD dir;
 	uint32_t pos;
 	dir = ID == ID_XIAOCHE ? XiaoChe_Now_Direction : DaLiang_Now_Direction;
 	pos = ID == ID_XIAOCHE ? XiaoChe_Now_Position : DaLiang_Now_Position;
 
 	if (ReadStatus(ID_XIAOCHE))
 	{
-		if (dir == 0x03)
+		if (dir == stop)
 		{
 			if (abs_int(pos, there) < PRECISION)
 			{
@@ -48,7 +48,7 @@ uint8_t deviceInThere(uint32_t ID, uint32_t there)
 
 
 /* 判断一个时刻C是否位于A和B之间 */
-uint8_t CompareTime(uint8_t A_Hour, uint8_t A_Minute, uint8_t B_Hour, uint8_t B_Minute, uint8_t C_Hour, uint8_t C_Minute)
+static uint8_t CompareTime(uint8_t A_Hour, uint8_t A_Minute, uint8_t B_Hour, uint8_t B_Minute, uint8_t C_Hour, uint8_t C_Minute)
 {
 	uint16_t A = 0, B = 0, C = 0;
 	A = (A_Hour << 8) + A_Minute;
@@ -63,7 +63,7 @@ uint8_t CompareTime(uint8_t A_Hour, uint8_t A_Minute, uint8_t B_Hour, uint8_t B_
 /* -----------------------------------------------------------------------------
 判断检测时间是否到达
 ----------------------------------------------------------------------------- */
-uint16_t ScanNextTimes(void)
+static uint16_t ScanNextTimes(void)
 {
 	uint32_t t, t_hour, t_minute;
 	uint8_t scan_flag;
@@ -115,7 +115,7 @@ uint16_t ScanNextTimes(void)
 /* -----------------------------------------------------------------------------
 区域扫描一次
 ----------------------------------------------------------------------------- */
-uint8_t ScanOneTimes(void)
+static uint8_t ScanOneTimes(void)
 {
 	uint8_t wr_buf[10];
 	if (CompareTime(scanStartTime.Hour, scanStartTime.Minute,
@@ -137,9 +137,66 @@ uint8_t ScanOneTimes(void)
 }
 
 /* -----------------------------------------------------------------------------
+大梁和小车回归原点
+-----------------------------------------------------------------------------  */
+static uint8_t XYgoZero(void)
+{
+	uint8_t wait;
+	uint32_t timeout;
+
+	PCBreakFlag = 0;
+	//1-小车和大梁归零
+	DebugMsg("发送小车和大梁归原点指令\r\n");
+	if (MotorToZero(ID_XIAOCHE) == 0)
+	{
+		DebugMsg("和小车通信失败\r\n");
+		return 0;
+	}
+	if (MotorToZero(ID_DALIANG) == 0)
+	{
+		DebugMsg("和大梁通信失败\r\n");
+		return 0;
+	}
+
+	//2-查询等待大梁和小车到达零点
+	DebugMsg("查询等待大梁和小车到达零点\r\n");
+	timeout = 0;
+	wait = 0x11;
+	while (wait)
+	{
+		if (wait & 0x10)		//判断小车位置
+		{
+			if (deviceInThere(ID_XIAOCHE, 0))
+				wait &= 0xEF;
+		}
+
+		if (wait & 0x01)		//判断大梁位置
+		{
+			if (deviceInThere(ID_DALIANG, 0))
+				wait &= 0xFE;
+		}
+		delay_ms(1000);
+		timeout++;
+		DebugNum(timeout);	//输出等待时间
+		if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
+		{
+			DebugMsg("等待超时返回\r\n");
+			return 0;
+		}
+		if (Is_PCStop(wifi))
+		{
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
+		}
+	}
+	return 1;
+}
+
+/* -----------------------------------------------------------------------------
 判断扫描计划任务
 ----------------------------------------------------------------------------- */
-void PlanTask(void)
+extern void PlanTask(void)
 {
 	switch (scanRepeatStyle)
 	{
@@ -202,68 +259,9 @@ void PlanTask(void)
 }
 
 /* -----------------------------------------------------------------------------
-大梁和小车回归原点
------------------------------------------------------------------------------  */
-uint8_t XYgoZero(void)
-{
-	uint8_t wait;
-	uint32_t timeout;
-
-	PCBreakFlag = 0;
-	//1-小车和大梁归零
-	DebugMsg("发送小车和大梁归原点指令\r\n");
-	if (MotorToZero(ID_XIAOCHE) == 0)
-	{
-		DebugMsg("和小车通信失败\r\n");
-		return 0;
-	}
-	if (MotorToZero(ID_DALIANG) == 0)
-	{
-		DebugMsg("和大梁通信失败\r\n");
-		return 0;
-	}
-
-	//2-查询等待大梁和小车到达零点
-	DebugMsg("查询等待大梁和小车到达零点\r\n");
-	timeout = 0;
-	wait = 0x11;
-	while (wait)
-	{
-		if (wait & 0x10)		//判断小车位置
-		{
-			if (deviceInThere(ID_XIAOCHE, 0))
-				wait &= 0xEF;
-		}
-
-		if (wait & 0x01)		//判断大梁位置
-		{
-			if (deviceInThere(ID_DALIANG, 0))
-				wait &= 0xFE;
-		}
-		delay_ms(1000);
-		timeout++;
-		DebugNum(timeout);	//输出等待时间
-		if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
-		{
-			DebugMsg("等待超时返回\r\n");
-			return 0;
-		}
-		if (PC_Stop())//上位机停止扫描
-		{
-			if (PCBreakFlag)
-			{
-				DebugMsg("上位机终止等待\r\n");
-				return 0;
-			}
-		}
-	}
-	return 1;
-}
-
-/* -----------------------------------------------------------------------------
 全面扫描
 ----------------------------------------------------------------------------- */
-uint8_t Scan_Full(void)
+extern uint8_t Scan_Full(void)
 {
 	uint8_t wait, scan_row;
 	uint32_t timeout;
@@ -319,13 +317,11 @@ uint8_t Scan_Full(void)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (PC_Stop())//上位机停止扫描
+		if (Is_PCStop(wifi))
 		{
-			if (PCBreakFlag)
-			{
-				DebugMsg("上位机终止等待\r\n");
-				return 0;
-			}
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
 		}
 	}
 
@@ -385,13 +381,11 @@ uint8_t Scan_Full(void)
 				DebugMsg("等待超时返回\r\n");
 				return 0;
 			}
-			if (PC_Stop())//上位机停止扫描
+			if (Is_PCStop(wifi))
 			{
-				if (PCBreakFlag)
-				{
-					DebugMsg("上位机终止等待\r\n");
-					return 0;
-				}
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
 			}
 		}
 		//8-小车移动到下一行
@@ -413,14 +407,11 @@ uint8_t Scan_Full(void)
 					DebugMsg("等待超时返回\r\n");
 					return 0;
 				}
-
-				if (PC_Stop())//上位机停止扫描
+				if (Is_PCStop(wifi))
 				{
-					if (PCBreakFlag)
-					{
-						DebugMsg("上位机终止等待\r\n");
-						return 0;
-					}
+					MotorMove(ID_XIAOCHE, stop);
+					MotorMove(ID_DALIANG, stop);
+					return 0;
 				}
 			}
 		}
@@ -433,11 +424,11 @@ uint8_t Scan_Full(void)
 /* -----------------------------------------------------------------------------
 区域扫描
 ----------------------------------------------------------------------------- */
-uint8_t Scan_Part(void)
+extern uint8_t Scan_Part(void)
 {
 	uint32_t timeout, x;
 	uint8_t wait, i, j, k, m, rd_buf[40];
-	uint8_t scan_long,  nowbyte;			//扫描字节个数
+	uint8_t scan_long, nowbyte;			//扫描字节个数
 	uint16_t scan_num;	//扫描到的植物
 
 	PCBreakFlag = 0;	//清楚PC终止标志
@@ -476,13 +467,11 @@ uint8_t Scan_Part(void)
 				DebugMsg("等待超时返回\r\n");
 				return 0;
 			}
-			if (PC_Stop())//上位机停止扫描
+			if (Is_PCStop(wifi))
 			{
-				if (PCBreakFlag)
-				{
-					DebugMsg("上位机终止等待\r\n");
-					return 0;
-				}
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
 			}
 		}
 
@@ -506,7 +495,7 @@ uint8_t Scan_Part(void)
 					wait = 0x01;
 					while (wait)
 					{
-						if (deviceInThere(ID_DALIANG, x)) 
+						if (deviceInThere(ID_DALIANG, x))
 							wait = 0;
 						delay_ms(1000);
 						timeout++;
@@ -516,13 +505,11 @@ uint8_t Scan_Part(void)
 							DebugMsg("等待超时返回\r\n");
 							return 0;
 						}
-						if (PC_Stop())//上位机停止扫描
+						if (Is_PCStop(wifi))
 						{
-							if (PCBreakFlag)
-							{
-								DebugMsg("上位机终止等待\r\n");
-								return 0;
-							}
+							MotorMove(ID_XIAOCHE, stop);
+							MotorMove(ID_DALIANG, stop);
+							return 0;
 						}
 					}
 					//7-给出5V信号并等待
@@ -531,8 +518,8 @@ uint8_t Scan_Part(void)
 					delay_ms(CAMERATIME);
 					SetXiaoChe_0V_Level();
 					scan_num++;
-					DebugMsg("本行已扫描目标 "); 
-					DebugNum(scan_num); 
+					DebugMsg("本行已扫描目标 ");
+					DebugNum(scan_num);
 					DebugMsg(" 个\r\n");
 				}
 				nowbyte >>= 1;
@@ -549,7 +536,7 @@ uint8_t Scan_Part(void)
 /* -----------------------------------------------------------------------------
 扫描指定行
 ----------------------------------------------------------------------------- */
-uint8_t Scan_Row(uint8_t scan_row)
+extern uint8_t Scan_Row(uint8_t scan_row)
 {
 	uint8_t wait;
 	uint32_t timeout;
@@ -600,13 +587,11 @@ uint8_t Scan_Row(uint8_t scan_row)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (PC_Stop())//上位机停止扫描
+		if (Is_PCStop(wifi))
 		{
-			if (PCBreakFlag)
-			{
-				DebugMsg("上位机终止等待\r\n");
-				return 0;
-			}
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
 		}
 	}
 
@@ -631,13 +616,11 @@ uint8_t Scan_Row(uint8_t scan_row)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (PC_Stop())//上位机停止扫描
+		if (Is_PCStop(wifi))
 		{
-			if (PCBreakFlag)
-			{
-				DebugMsg("上位机终止等待\r\n");
-				return 0;
-			}
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
 		}
 	}
 
@@ -654,7 +637,7 @@ uint8_t Scan_Row(uint8_t scan_row)
 /* -----------------------------------------------------------------------------
 扫描指定列
 ----------------------------------------------------------------------------- */
-uint8_t Scan_Column(uint16_t scan_column)
+extern uint8_t Scan_Column(uint16_t scan_column)
 {
 	uint8_t wait;
 	uint32_t timeout, column_position;
@@ -706,13 +689,11 @@ uint8_t Scan_Column(uint16_t scan_column)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (PC_Stop())//上位机停止扫描
+		if (Is_PCStop(wifi))
 		{
-			if (PCBreakFlag)
-			{
-				DebugMsg("上位机终止等待\r\n");
-				return 0;
-			}
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
 		}
 	}
 
@@ -729,7 +710,7 @@ uint8_t Scan_Column(uint16_t scan_column)
 	while (wait)
 	{
 
-		if (deviceInThere(ID_XIAOCHE,map.Row[map.Plant_Row - 1]))
+		if (deviceInThere(ID_XIAOCHE, map.Row[map.Plant_Row - 1]))
 			wait = 0;
 		delay_ms(1000);
 		timeout++;
@@ -739,13 +720,11 @@ uint8_t Scan_Column(uint16_t scan_column)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (PC_Stop())//上位机停止扫描
+		if (Is_PCStop(wifi))
 		{
-			if (PCBreakFlag)
-			{
-				DebugMsg("上位机终止等待\r\n");
-				return 0;
-			}
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
 		}
 	}
 
