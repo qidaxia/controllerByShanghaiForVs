@@ -47,6 +47,7 @@ int main(void)
 	//Test();
 	while (1)
 	{
+
 		//1-处理串口WIFI通信
 		if (Usart2_rcv_flag)
 		{
