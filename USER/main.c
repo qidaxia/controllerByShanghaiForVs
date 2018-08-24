@@ -14,8 +14,13 @@
 int main(void)
 {
 	u8 oldLen = 0;
+	uint8_t cmd = 0xff;
+	uint8_t * dataPtr = (void *)0;
+	DEVICE device = wifi;
+	
 	DebugFlag = 0;
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
+
 
 	My_RTC_Init();				//初始化RTC
 	delay_init(168);			//延时初始化 
@@ -27,14 +32,6 @@ int main(void)
 	TIM3_Int_Init(10 - 1, 8400 - 1);//定时器时钟84M，分频系数8400，所以84M/8400=10Khz的计数频率，计数10次为1ms
 
 	init_Parameter();
-	//Usart2_rcv_flag = 0;		//串口2接收到数据
-	//Usart2_receive_timer = 0;
-	//Usart2_receive_on = 0;
-
-	//Uart5_rcv_flag = 0;			//串口5接收到数据
-	//Uart5_receive_timer = 0;	//串口5接收超时定时器
-	//Uart5_receive_on = 0;		//串口5接收定时开关
-
 
 	BreakFlag = 0;
 	WorkStatus = 0;
@@ -43,16 +40,16 @@ int main(void)
 	while (1)
 	{
 		//------------------接收完成数据处理
-		if (getReciveLen(wifi) != 0 && oldLen == getReciveLen(wifi))
+		if (getReciveLen(device) != 0 && oldLen == getReciveLen(device))
 		{
-			//handlerFrame(wifi);
-			handlerFrameTest(wifi);
+			dataPtr = getCmdFrame(device, &cmd);
+			handlerFrame(device, cmd, dataPtr);
 			oldLen = 0;
-			clearReciveBuf(wifi);
+			clearReciveBuf(device);
 		}
 		else
 		{
-			oldLen = getReciveLen(wifi);
+			oldLen = getReciveLen(device);
 		}
 		if (Scan_SW)
 		{

@@ -183,11 +183,14 @@ static uint8_t XYgoZero(void)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (Is_PCStop(wifi))
+		if (pcCheck(wifi))
 		{
-			MotorMove(ID_XIAOCHE, stop);
-			MotorMove(ID_DALIANG, stop);
-			return 0;
+			if (PCBreakFlag)
+			{
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
+			}
 		}
 	}
 	return 1;
@@ -317,11 +320,14 @@ extern uint8_t Scan_Full(void)
 			DebugMsg("等待超时返回\r\n");
 			return 0;
 		}
-		if (Is_PCStop(wifi))
+		if (pcCheck(wifi))
 		{
-			MotorMove(ID_XIAOCHE, stop);
-			MotorMove(ID_DALIANG, stop);
-			return 0;
+			if (PCBreakFlag)
+			{
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
+			}
 		}
 	}
 
@@ -351,11 +357,12 @@ extern uint8_t Scan_Full(void)
 				DebugMsg("等待超时返回\r\n");
 				return 0;
 			}
-			if (PC_Stop())//上位机停止扫描
+			if (pcCheck(wifi))
 			{
 				if (PCBreakFlag)
 				{
-					DebugMsg("上位机终止等待\r\n");
+					MotorMove(ID_XIAOCHE, stop);
+					MotorMove(ID_DALIANG, stop);
 					return 0;
 				}
 			}
@@ -381,11 +388,14 @@ extern uint8_t Scan_Full(void)
 				DebugMsg("等待超时返回\r\n");
 				return 0;
 			}
-			if (Is_PCStop(wifi))
+			if (pcCheck(wifi))
 			{
-				MotorMove(ID_XIAOCHE, stop);
-				MotorMove(ID_DALIANG, stop);
-				return 0;
+				if (PCBreakFlag)
+				{
+					MotorMove(ID_XIAOCHE, stop);
+					MotorMove(ID_DALIANG, stop);
+					return 0;
+				}
 			}
 		}
 		//8-小车移动到下一行
@@ -404,14 +414,17 @@ extern uint8_t Scan_Full(void)
 				DebugNum(timeout);	//输出等待时间
 				if (timeout > XIAOCHE_TIMEOUT)//10分钟不能到达指定位置，超时退出
 				{
-					DebugMsg("等待超时返回\r\n");
+					DebugMsg("等待超时\r\n");
 					return 0;
 				}
-				if (Is_PCStop(wifi))
+				if (pcCheck(wifi))
 				{
-					MotorMove(ID_XIAOCHE, stop);
-					MotorMove(ID_DALIANG, stop);
-					return 0;
+					if (PCBreakFlag)
+					{
+						MotorMove(ID_XIAOCHE, stop);
+						MotorMove(ID_DALIANG, stop);
+						return 0;
+					}
 				}
 			}
 		}
@@ -464,14 +477,17 @@ extern uint8_t Scan_Part(void)
 			DebugNum(timeout);	//输出等待时间
 			if (timeout > XIAOCHE_TIMEOUT)//10分钟不能到达指定位置，超时退出
 			{
-				DebugMsg("等待超时返回\r\n");
+				DebugMsg("等待超时\r\n");
 				return 0;
 			}
-			if (Is_PCStop(wifi))
+			if (pcCheck(wifi))
 			{
-				MotorMove(ID_XIAOCHE, stop);
-				MotorMove(ID_DALIANG, stop);
-				return 0;
+				if (PCBreakFlag)
+				{
+					MotorMove(ID_XIAOCHE, stop);
+					MotorMove(ID_DALIANG, stop);
+					return 0;
+				}
 			}
 		}
 
@@ -502,14 +518,17 @@ extern uint8_t Scan_Part(void)
 						DebugNum(timeout);	//输出等待时间
 						if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
 						{
-							DebugMsg("等待超时返回\r\n");
+							DebugMsg("等待超时\r\n");
 							return 0;
 						}
-						if (Is_PCStop(wifi))
+						if (pcCheck(wifi))
 						{
-							MotorMove(ID_XIAOCHE, stop);
-							MotorMove(ID_DALIANG, stop);
-							return 0;
+							if (PCBreakFlag)
+							{
+								MotorMove(ID_XIAOCHE, stop);
+								MotorMove(ID_DALIANG, stop);
+								return 0;
+							}
 						}
 					}
 					//7-给出5V信号并等待
@@ -584,14 +603,17 @@ extern uint8_t Scan_Row(uint8_t scan_row)
 		DebugNum(timeout);	//输出等待时间
 		if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
 		{
-			DebugMsg("等待超时返回\r\n");
+			DebugMsg("等待超时\r\n");
 			return 0;
 		}
-		if (Is_PCStop(wifi))
+		if (pcCheck(wifi))
 		{
-			MotorMove(ID_XIAOCHE, stop);
-			MotorMove(ID_DALIANG, stop);
-			return 0;
+			if (PCBreakFlag)
+			{
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
+			}
 		}
 	}
 
@@ -613,14 +635,17 @@ extern uint8_t Scan_Row(uint8_t scan_row)
 		DebugNum(timeout);	//输出等待时间
 		if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
 		{
-			DebugMsg("等待超时返回\r\n");
+			DebugMsg("等待超时\r\n");
 			return 0;
 		}
-		if (Is_PCStop(wifi))
+		if (pcCheck(wifi))
 		{
-			MotorMove(ID_XIAOCHE, stop);
-			MotorMove(ID_DALIANG, stop);
-			return 0;
+			if (PCBreakFlag)
+			{
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
+			}
 		}
 	}
 
@@ -686,14 +711,17 @@ extern uint8_t Scan_Column(uint16_t scan_column)
 		DebugNum(timeout);	//输出等待时间
 		if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
 		{
-			DebugMsg("等待超时返回\r\n");
+			DebugMsg("等待超时\r\n");
 			return 0;
 		}
-		if (Is_PCStop(wifi))
+		if (pcCheck(wifi))
 		{
-			MotorMove(ID_XIAOCHE, stop);
-			MotorMove(ID_DALIANG, stop);
-			return 0;
+			if (PCBreakFlag)
+			{
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
+			}
 		}
 	}
 
@@ -717,14 +745,17 @@ extern uint8_t Scan_Column(uint16_t scan_column)
 		DebugNum(timeout);	//输出等待时间
 		if (timeout > XIAOCHE_TIMEOUT)//10分钟不能到达指定位置，超时退出
 		{
-			DebugMsg("等待超时返回\r\n");
+			DebugMsg("等待超时\r\n");
 			return 0;
 		}
-		if (Is_PCStop(wifi))
+		if (pcCheck(wifi))
 		{
-			MotorMove(ID_XIAOCHE, stop);
-			MotorMove(ID_DALIANG, stop);
-			return 0;
+			if (PCBreakFlag)
+			{
+				MotorMove(ID_XIAOCHE, stop);
+				MotorMove(ID_DALIANG, stop);
+				return 0;
+			}
 		}
 	}
 

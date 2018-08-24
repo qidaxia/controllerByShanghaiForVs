@@ -16,7 +16,7 @@ uint8_t WorkStatus;      //工作状态
 uint8_t BreakFlag;       //中断执行标志
 uint8_t  PCBreakFlag;	 //上位机终止当前任务
 
-uint8_t paulseStyle;					//脉冲输出方式
+LEVELMODE paulseStyle;					//脉冲输出方式
 uint16_t Scan_Interval;					//扫描时间间隔，单位分钟
 uint16_t Scan_Times;					//当日扫描次数
 uint8_t  Scan_SW;						//任务扫描开关
@@ -39,57 +39,57 @@ RTC_BKP_DR0		RTC初始化标志，如果=0x5050表示已经初始化过了
 
 extern void init_Parameter(void)
 {
-	uint8_t rd_buf[50],i;
-	
+	uint8_t rd_buf[50], i;
+
 	//1-植物行数
-	read_from_backup_sram(rd_buf,4,11);	
- 	map.Plant_Row = rd_buf[3];
+	read_from_backup_sram(rd_buf, 4, 11);
+	map.Plant_Row = rd_buf[3];
 	DebugMsg("植物行数："); DebugNum(map.Plant_Row); DebugMsg("\r\n");
 
 	//2-植物列数
-	read_from_backup_sram(rd_buf,4,15);	
- 	map.Plant_Column = (rd_buf[2]<<8)+rd_buf[3];
+	read_from_backup_sram(rd_buf, 4, 15);
+	map.Plant_Column = (rd_buf[2] << 8) + rd_buf[3];
 	DebugMsg("植物列数："); DebugNum(map.Plant_Column); DebugMsg("\r\n");
-	
+
 	//3-植物行坐标
-	for(i=0;i<map.Plant_Row;i++)
+	for (i = 0; i < map.Plant_Row; i++)
 	{
-		read_from_backup_sram(rd_buf,4,BASEADDR_ROW+4*i);	
-		map.Row[i] = (rd_buf[0]<<24)+(rd_buf[1]<<16)+(rd_buf[2]<<8)+rd_buf[3];
-		DebugMsg("第 "); DebugNum(i+1); DebugMsg(" 行坐标： "); DebugNum(map.Row[i]); DebugMsg("\r\n");
+		read_from_backup_sram(rd_buf, 4, BASEADDR_ROW + 4 * i);
+		map.Row[i] = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
+		DebugMsg("第 "); DebugNum(i + 1); DebugMsg(" 行坐标： "); DebugNum(map.Row[i]); DebugMsg("\r\n");
 	}
-	
+
 	//4-首列坐标
-	read_from_backup_sram(rd_buf,4,BASEADDR_COL_FIRST);	
-	map.Column_First = (rd_buf[0]<<24)+(rd_buf[1]<<16)+(rd_buf[2]<<8)+rd_buf[3];
+	read_from_backup_sram(rd_buf, 4, BASEADDR_COL_FIRST);
+	map.Column_First = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
 	DebugMsg("首列坐标："); DebugNum(map.Column_First); DebugMsg("\r\n");
-	
+
 	//5-最大列坐标
-	read_from_backup_sram(rd_buf,4,BASEADDR_COL_LAST);		
-	map.Column_Last =  (rd_buf[0]<<24)+(rd_buf[1]<<16)+(rd_buf[2]<<8)+rd_buf[3];
+	read_from_backup_sram(rd_buf, 4, BASEADDR_COL_LAST);
+	map.Column_Last = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
 	DebugMsg("末列坐标："); DebugNum(map.Column_Last); DebugMsg("\r\n");
-	
+
 	//6-计算列间隙
-	if(map.Plant_Column==1)
+	if (map.Plant_Column == 1)
 		map.Column_Interval = 0;
-	else if(map.Plant_Column>1)
-		map.Column_Interval = (map.Column_Last-map.Column_First)/(map.Plant_Column-1);
+	else if (map.Plant_Column > 1)
+		map.Column_Interval = (map.Column_Last - map.Column_First) / (map.Plant_Column - 1);
 	DebugMsg("列间距："); DebugNum(map.Column_Interval); DebugMsg("\r\n");
-	
+
 	//7-脉冲输出方式，扫描起始时间，扫描结束时间，扫描间隔，扫描重复方式
-	read_from_backup_sram(rd_buf,11,67);	
-	paulseStyle = rd_buf[0];//脉冲输出方式
+	read_from_backup_sram(rd_buf, 11, 67);
+	paulseStyle = (LEVELMODE)rd_buf[0];//脉冲输出方式
 	scanStartTime.Hour = rd_buf[1];			 //起始时间：时
 	scanStartTime.Minute = rd_buf[2];		 //起始时间：分
 	scanStopTime.Hour = rd_buf[3];				 //结束时间：时
 	scanStopTime.Minute = rd_buf[4];			 //结束时间：分
-	Scan_Interval = rd_buf[5] + (rd_buf[6]<<8) + (rd_buf[7]<<16) + (rd_buf[8]<<24); //扫描时间间隔
-	scanRepeatStyle =(ScanRepeatStyle) rd_buf[9];	//扫描重复方式
+	Scan_Interval = rd_buf[5] + (rd_buf[6] << 8) + (rd_buf[7] << 16) + (rd_buf[8] << 24); //扫描时间间隔
+	scanRepeatStyle = (ScanRepeatStyle)rd_buf[9];	//扫描重复方式
 	Scan_SW = rd_buf[10];	//任务总开关
 
 	Scan_Times = 0;				//当日扫描次数
 	Scan_Day = 0;					//当日扫描日期
 	nextScanTime.Hour = 0;		//下次扫描时间
 	nextScanTime.Minute = 0;
-	
+
 }

@@ -121,8 +121,12 @@ typedef enum
 
 extern ScanRepeatStyle scanRepeatStyle;				//…®√Ë÷ÿ∏¥∑Ω Ω
 
-
-
+typedef enum
+{
+	highLevel = 1,
+	pullse,
+	other,
+}LEVELMODE;
 
 extern u8 cmdStart[5];
 extern u8 cmdEnd[3];
@@ -133,18 +137,13 @@ extern u8 cmdIdDebug[3];
 extern void loraInit(void);
 extern void wifiInit(void);
 extern void SendBuff(DEVICE device, u8 *buf, u8 len);
-
-
 extern void DebugMsg(uint8_t *str);
 extern void DebugNum(uint32_t num);
 extern int fputc(int ch, FILE *f);
 
-
 extern u8 getReciveLen(DEVICE com);
-
 extern void clearReciveBuf(DEVICE com);
 extern uint8_t * getCmdFrame(DEVICE com, uint8_t *cmd);
-extern void handlerFrameTest(DEVICE com);
-extern void handlerFrame(DEVICE com);
+extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr);
 
 #endif // !DESINGE_H

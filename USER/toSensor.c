@@ -10,19 +10,12 @@
 #include "init_Parameter.h"
 
 
-
-//指令间等待程序，两个指令间必须加延时，否则会被当做一次传输
 static void LoraWait(void)
 {
 	LED2_ON;        //蓝灯闪烁一次
 	delay_ms(100);
 	LED2_OFF;
 }
-
-/* -------------------------------------------------------------------------------
-1- 电机控制命令,定点发送，小车ID=100，大梁ID=200
-方向（0x01向前、0x02向后，0x03停止）
-------------------------------------------------------------------------------- */
 
 extern RETCODE MotorMove(uint8_t ID, MOVECMD dir)
 {
@@ -31,7 +24,7 @@ extern RETCODE MotorMove(uint8_t ID, MOVECMD dir)
 	tempBuf[0] = ID / 256;
 	tempBuf[1] = ID % 256;
 	LoraWait();
-	
+
 	clearReciveBuf(lora);
 	if (ID != ID_XIAOCHE&&ID != ID_DALIANG)
 	{
@@ -65,10 +58,6 @@ extern RETCODE waitLoraAck(void)
 		return RET_ERR;
 }
 
-/* -------------------------------------------------------------------------------
-2- 运动到指定位置,定点发送，小车ID=100，大梁ID=200
-三字节位置数据，高字节在前，低字节在后，最高位+1，为避免使用0
-------------------------------------------------------------------------------- */
 extern RETCODE MotorToPosition(uint8_t ID, uint32_t pos)
 {
 	uint8_t check, send_times;
@@ -101,9 +90,6 @@ extern RETCODE MotorToPosition(uint8_t ID, uint32_t pos)
 	return RET_ERR;
 }
 
-/*
-3- 运动到零点,定点发送，小车ID=100，大梁ID=200
-*/
 extern RETCODE MotorToZero(uint8_t ID)
 {
 	uint8_t  send_times;
@@ -132,9 +118,6 @@ extern RETCODE MotorToZero(uint8_t ID)
 	return RET_ERR;
 }
 
-/* -------------------------------------------------------------------------------
-4- 读取当前状态,定点发送，小车ID=100，大梁ID=200
-------------------------------------------------------------------------------- */
 extern RETCODE ReadStatus(uint8_t ID)
 {
 	uint8_t check;
@@ -227,19 +210,14 @@ extern RETCODE ReadStatus(uint8_t ID)
 		return RET_ERR;
 }
 
-/* -------------------------------------------------------------------------------
-5- 小车输出5V信号，只对小车有效
-命令（04）+参数（1持续电平，2脉冲，3其它）
-返回：ACK
-------------------------------------------------------------------------------- */
-extern uint8_t SetXiaoChe_5V_Level(uint8_t levelmode)
+extern uint8_t SetXiaoChe_5V_Level(LEVELMODE levelmode)
 {
 	u8 tempBuf[2] = { 0x00,0x00 };
 
 	clearReciveBuf(lora);
 	LoraWait();
 	tempBuf[0] = 0x04;
-	tempBuf[1] = levelmode;
+	tempBuf[1] = (uint8_t)levelmode;
 
 	SendBuff(lora, cmdIdCar, 3);
 	SendBuff(lora, cmdStart, 5);
@@ -249,11 +227,8 @@ extern uint8_t SetXiaoChe_5V_Level(uint8_t levelmode)
 	return waitLoraAck();
 }
 
-/* -------------------------------------------------------------------------------
-6- 小车结束5V信号，只对小车有效
-命令（07）+参数
-返回：ACK
-------------------------------------------------------------------------------- */
+
+
 extern uint8_t SetXiaoChe_0V_Level(void)
 {
 	u8 tempBuf[1] = { 0x00 };
@@ -269,12 +244,6 @@ extern uint8_t SetXiaoChe_0V_Level(void)
 	return waitLoraAck();
 }
 
-
-/* -------------------------------------------------------------------------------
-7- 切换速度（只对大梁有效）
- 命令（06）+参数（0低速，1中速，2高速）
-返回：ACK
-------------------------------------------------------------------------------- */
 extern RETCODE ChangeSpeed(SPEED speed)
 {
 	u8 tempBuf[2] = { 0x00,0x00 };
