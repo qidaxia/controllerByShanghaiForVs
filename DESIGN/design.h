@@ -24,9 +24,9 @@
 #define BASEADDR_COL_LAST	63
 #define BASEADDR_COLUMN_BIT	100
 
-#define PRECISION	30		//30个脉冲误差
-#define DALIANG_TIMEOUT	600		//大梁运动超时
-#define XIAOCHE_TIMEOUT 200		//小车运动超时
+#define PRECISION	30			//30个脉冲误差
+#define DALIANG_TIMEOUT	60000		//大梁运动超时
+#define XIAOCHE_TIMEOUT 20000		//小车运动超时
 //植物扫描配置相关参数
 #define CAMERATIME	1							//按位扫描相机暂停时间
 

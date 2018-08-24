@@ -114,18 +114,13 @@ extern uint8_t pcCheck(DEVICE com)
 {
 	uint8_t cmd = 0xff;
 	uint8_t * dataPtr = (void *)0;
-	static uint8_t len = 0;
-	if (len != getReciveLen(com))
-	{
-		len == getReciveLen(com);
-		return 0;
-	}
+
 	dataPtr = getCmdFrame(com, &cmd);
-	handlerFrame(com, cmd, dataPtr);
-	clearReciveBuf(com);
 	if (cmd == 0xff)
 	{
 		return 0;
 	}
+	handlerFrame(com, cmd, dataPtr);
+	clearReciveBuf(com);
 	return 1;
 }

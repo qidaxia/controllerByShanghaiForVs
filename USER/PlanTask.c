@@ -142,7 +142,7 @@ static uint8_t ScanOneTimes(void)
 static uint8_t XYgoZero(void)
 {
 	uint8_t wait;
-	uint32_t timeout;
+	uint32_t timeout=0;
 
 	PCBreakFlag = 0;
 	//1-小车和大梁归零
@@ -160,11 +160,10 @@ static uint8_t XYgoZero(void)
 
 	//2-查询等待大梁和小车到达零点
 	DebugMsg("查询等待大梁和小车到达零点\r\n");
-	timeout = 0;
 	wait = 0x11;
 	while (wait)
 	{
-		if (wait & 0x10)		//判断小车位置
+		if ((wait & 0x10) && (timeout % 50 == 0))		//判断小车位置
 		{
 			if (deviceInThere(ID_XIAOCHE, 0))
 				wait &= 0xEF;
@@ -175,22 +174,21 @@ static uint8_t XYgoZero(void)
 			if (deviceInThere(ID_DALIANG, 0))
 				wait &= 0xFE;
 		}
-		delay_ms(1000);
+
+		if (pcCheck(wifi) && PCBreakFlag)
+		{
+			MotorMove(ID_XIAOCHE, stop);
+			MotorMove(ID_DALIANG, stop);
+			return 0;
+		}
+
+		delay_ms(20);
 		timeout++;
-		DebugNum(timeout);	//输出等待时间
-		if (timeout > DALIANG_TIMEOUT)//10分钟不能到达指定位置，超时退出
+		DebugNum(timeout);				//输出等待时间
+		if (timeout > DALIANG_TIMEOUT)	//超时退出 20*60000=20min
 		{
 			DebugMsg("等待超时返回\r\n");
 			return 0;
-		}
-		if (pcCheck(wifi))
-		{
-			if (PCBreakFlag)
-			{
-				MotorMove(ID_XIAOCHE, stop);
-				MotorMove(ID_DALIANG, stop);
-				return 0;
-			}
 		}
 	}
 	return 1;

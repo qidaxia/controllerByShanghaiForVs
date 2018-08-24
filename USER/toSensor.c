@@ -124,6 +124,7 @@ extern RETCODE ReadStatus(uint8_t ID)
 	u8 tempBuf[4] = { 0x00,0x00,72,0x00 };
 	MOVECMD dir;
 	uint32_t pos;
+	uint32_t timeout = 0;
 
 	if (ID != ID_DALIANG && ID != ID_XIAOCHE)
 	{
@@ -141,9 +142,14 @@ extern RETCODE ReadStatus(uint8_t ID)
 	SendBuff(lora, tempBuf + 3, 1);
 	SendBuff(lora, cmdEnd, 3);
 
-
-	USART6_RX_BUF[0] = '0';
-	delay_ms(1000);
+	while (getReciveLen(lora) < 13)
+	{
+		delay_ms(2);
+		if (timeout++ >= 500)
+		{
+			goto ERROR;
+		}
+	}
 
 	if ((USART6_RX_BUF[0] == 's') && (USART6_RX_BUF[1] == 't') && (USART6_RX_BUF[12] == 'd'))
 	{
@@ -167,7 +173,10 @@ extern RETCODE ReadStatus(uint8_t ID)
 				DaLiang_Now_Direction = dir;
 				DaLiang_Now_Position = pos;
 			}
-
+			if (DebugFlag)
+			{
+				goto OK;
+			}
 			/* 发送小车和大梁位置 */
 			DebugMsg("小车状态：");
 			switch (XiaoChe_Now_Direction)
@@ -201,13 +210,18 @@ extern RETCODE ReadStatus(uint8_t ID)
 			}
 			DebugNum(DaLiang_Now_Position);
 			DebugMsg("\r\n");
-			return RET_OK;
+			goto OK;
 		}
 		else
-			return RET_ERR;
+			goto ERROR;
 	}
 	else
-		return RET_ERR;
+		goto ERROR;
+
+OK:
+	return RET_OK;
+ERROR:
+	return RET_ERR;
 }
 
 extern uint8_t SetXiaoChe_5V_Level(LEVELMODE levelmode)

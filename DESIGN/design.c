@@ -83,7 +83,6 @@ static void wifiSendBuff(u8 *buf, u8 len)
 
 extern void DebugMsg(uint8_t *str)
 {
-	delay_ms(30);
 	if (!DebugFlag)
 	{
 		return;
@@ -98,7 +97,10 @@ extern void DebugMsg(uint8_t *str)
 
 extern void DebugNum(uint32_t num)
 {
-	delay_ms(30);
+	if (!DebugFlag)
+	{
+		return;
+	}
 	SendBuff(lora, cmdIdDebug, 3);
 	printf("%d", num);
 }
