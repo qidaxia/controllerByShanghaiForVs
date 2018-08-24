@@ -5,17 +5,14 @@
 #include "init_Parameter.h"
 #include "PlanTask.h"
 
+
 UartManageVarStruct loraManage;
 UartManageVarStruct wifiManage;
-
 TIME scanStartTime;
 TIME scanStopTime;
 TIME nextScanTime;
-
 MAP map;
-
 ScanRepeatStyle scanRepeatStyle;
-
 u8 cmdStart[5] = { 's','t','a','r','t' };
 u8 cmdEnd[3] = { 'e','n','d' };
 u8 cmdIdCar[3] = { ID_XIAOCHE / 256,ID_XIAOCHE % 256,72 };
@@ -35,6 +32,7 @@ extern void wifiInit(void)
 }
 
 static void loraSendBuff(u8 *buf, u8 len);
+
 static  void wifiSendBuff(u8 *buf, u8 len);
 
 extern void SendBuff(DEVICE device, u8 *buf, u8 len)
@@ -79,7 +77,6 @@ static void wifiSendBuff(u8 *buf, u8 len)
 		wifiSendB(*(buf + i));
 	}
 }
-
 
 extern void DebugMsg(uint8_t *str)
 {
@@ -420,6 +417,7 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 	case 0x04:
 		SendBatteryVoltage(com);
 		break;
+
 		//上位机终止当前任务
 	case 0x05:
 		PCBreakFlag = 1;

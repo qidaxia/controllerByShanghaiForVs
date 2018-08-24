@@ -17,6 +17,24 @@ static void LoraWait(void)
 	LED2_OFF;
 }
 
+extern RETCODE waitLoraAck(void)
+{
+	u8 i = 0;
+	while (getReciveLen(lora) < 3)
+	{
+		delay_ms(2);
+		i++;
+		if (i >= 500)
+		{
+			return RET_ERR;
+		}
+	}
+	if ((USART6_RX_BUF[0] == 'A') && (USART6_RX_BUF[2] == 'K'))
+		return RET_OK;
+	else
+		return RET_ERR;
+}
+
 extern RETCODE MotorMove(uint8_t ID, MOVECMD dir)
 {
 	u8 tempBuf[5] = { 0x00,0x00,72,0x01,0x00 };
@@ -37,25 +55,6 @@ extern RETCODE MotorMove(uint8_t ID, MOVECMD dir)
 	SendBuff(lora, tempBuf + 3, 2);
 	SendBuff(lora, cmdEnd, 3);
 	return waitLoraAck();
-}
-
-extern RETCODE waitLoraAck(void)
-{
-	u8 i = 0;
-	while (getReciveLen(lora) < 3)
-	{
-		delay_ms(2);
-		i++;
-		if (i >= 500)
-		{
-			return RET_ERR;
-		}
-	}
-
-	if ((USART6_RX_BUF[0] == 'A') && (USART6_RX_BUF[2] == 'K'))
-		return RET_OK;
-	else
-		return RET_ERR;
 }
 
 extern RETCODE MotorToPosition(uint8_t ID, uint32_t pos)
@@ -121,23 +120,23 @@ extern RETCODE MotorToZero(uint8_t ID)
 extern RETCODE ReadStatus(uint8_t ID)
 {
 	uint8_t check;
-	u8 tempBuf[4] = { 0x00,0x00,72,0x00 };
+	u8 tempBuf[4] = { 0x00,0x00,72,0x03 };
 	MOVECMD dir;
 	uint32_t pos;
 	uint32_t timeout = 0;
+	uint8_t cmd;
+	uint8_t *dataPtr = (void *)0;
 
 	if (ID != ID_DALIANG && ID != ID_XIAOCHE)
 	{
 		return RET_ERR;
 	}
-
 	clearReciveBuf(lora);
 	LoraWait();
 	tempBuf[0] = ID / 256;
 	tempBuf[1] = ID % 256;
-	tempBuf[3] = 0x03;//状态读取指令
-	SendBuff(lora, tempBuf, 3);
 
+	SendBuff(lora, tempBuf, 3);
 	SendBuff(lora, cmdStart, 5);
 	SendBuff(lora, tempBuf + 3, 1);
 	SendBuff(lora, cmdEnd, 3);
@@ -150,18 +149,18 @@ extern RETCODE ReadStatus(uint8_t ID)
 			goto ERROR;
 		}
 	}
-
-	if ((USART6_RX_BUF[0] == 's') && (USART6_RX_BUF[1] == 't') && (USART6_RX_BUF[12] == 'd'))
+	dataPtr = getCmdFrame(lora, &cmd);
+	if (dataPtr != (void *)0)
 	{
-		check = USART6_RX_BUF[6] + USART6_RX_BUF[7] + USART6_RX_BUF[8];
-		if (USART6_RX_BUF[9] == check)	//判断校验
+		check = *(dataPtr + 1) + *(dataPtr + 2) + *(dataPtr + 3);
+		if (check == *(dataPtr + 4))	//判断校验
 		{
-			dir = (MOVECMD)USART6_RX_BUF[5];
-			pos = USART6_RX_BUF[6] - 1;		//最高位+1，避免发送0时模块容易丢失
+			dir = (MOVECMD)(*dataPtr);
+			pos = (*(dataPtr + 1)) - 1;		//最高位+1，避免发送0时模块容易丢失
 			pos <<= 8;
-			pos += USART6_RX_BUF[7];
+			pos += (*(dataPtr + 2));
 			pos <<= 8;
-			pos += USART6_RX_BUF[8];
+			pos += (*(dataPtr + 3));
 
 			if (ID == ID_XIAOCHE)
 			{
@@ -190,7 +189,6 @@ extern RETCODE ReadStatus(uint8_t ID)
 			case 3:
 				DebugMsg("静止，坐标：");
 				break;
-
 			}
 			DebugNum(XiaoChe_Now_Position);
 			DebugMsg("\r\n");
@@ -212,12 +210,11 @@ extern RETCODE ReadStatus(uint8_t ID)
 			DebugMsg("\r\n");
 			goto OK;
 		}
-		else
-			goto ERROR;
 	}
 	else
+	{
 		goto ERROR;
-
+	}
 OK:
 	return RET_OK;
 ERROR:
@@ -226,11 +223,10 @@ ERROR:
 
 extern uint8_t SetXiaoChe_5V_Level(LEVELMODE levelmode)
 {
-	u8 tempBuf[2] = { 0x00,0x00 };
+	u8 tempBuf[2] = { 0x04,0x00 };
 
 	clearReciveBuf(lora);
 	LoraWait();
-	tempBuf[0] = 0x04;
 	tempBuf[1] = (uint8_t)levelmode;
 
 	SendBuff(lora, cmdIdCar, 3);
@@ -245,7 +241,7 @@ extern uint8_t SetXiaoChe_5V_Level(LEVELMODE levelmode)
 
 extern uint8_t SetXiaoChe_0V_Level(void)
 {
-	u8 tempBuf[1] = { 0x00 };
+	u8 tempBuf[1] = { 0x07 };
 
 	clearReciveBuf(lora);
 	LoraWait();
@@ -260,11 +256,10 @@ extern uint8_t SetXiaoChe_0V_Level(void)
 
 extern RETCODE ChangeSpeed(SPEED speed)
 {
-	u8 tempBuf[2] = { 0x00,0x00 };
+	u8 tempBuf[2] = { 0x06,0x00 };
 	clearReciveBuf(lora);
 	LoraWait();
 
-	tempBuf[0] = 0x06;
 	tempBuf[1] = (u8)speed;
 
 	SendBuff(lora, cmdIdBridge, 3);
