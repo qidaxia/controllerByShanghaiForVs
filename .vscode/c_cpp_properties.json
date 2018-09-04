@@ -11,6 +11,7 @@
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE",
+                "__CC_ARM",
                 "STM32F40_41xxx",
                 "USE_STDPERIPH_DRIVER"
             ],

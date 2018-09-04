@@ -17,35 +17,36 @@ uint32_t x = 0;
 void Test(void)
 {
 	uint8_t i;
-	uint8_t wrdata[10] = { 1,1,1,2,5,6,7,8,9,10 };
+	uint8_t wrdata[10] = {1, 1, 1, 2, 5, 6, 7, 8, 9, 10};
 	//uint8_t wrdata2[10] = { 11,12,13,14,15,16,17,18,19,20 };
 	uint8_t rddata[10];
-
 
 	x = (wrdata[0] << 24) + (wrdata[1] << 16) + (wrdata[2] << 8) + wrdata[3];
 	//while(1);
 
-//1-²âÊÔ±¸·İ¼Ä´æÆ÷
+	//1-ï¿½ï¿½ï¿½Ô±ï¿½ï¿½İ¼Ä´ï¿½ï¿½ï¿½
 	while (0)
 	{
-		//int8_t write_to_backup_sram( uint8_t *data, uint16_t bytes, uint16_t offset );//Ğ´Êı¾İµ½±¸·İSRAM
+		//int8_t write_to_backup_sram( uint8_t *data, uint16_t bytes, uint16_t offset );//Ğ´ï¿½ï¿½ï¿½İµï¿½ï¿½ï¿½ï¿½ï¿½SRAM
 		//write_to_backup_sram(wrdata,10,0);
 		delay_ms(500);
-		for (i = 0; i < 10; i++)rddata[i] = 0;
-		//int8_t read_from_backup_sram(uint8_t *data, uint16_t bytes, uint16_t offset);//´Ó±¸·İSRAM¶ÁÈ¡Êı¾İ
+		for (i = 0; i < 10; i++)
+			rddata[i] = 0;
+		//int8_t read_from_backup_sram(uint8_t *data, uint16_t bytes, uint16_t offset);//ï¿½Ó±ï¿½ï¿½ï¿½SRAMï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 		read_from_backup_sram(rddata, 10, 0);
 		delay_ms(500);
 
-		//int8_t write_to_backup_sram( uint8_t *data, uint16_t bytes, uint16_t offset );//Ğ´Êı¾İµ½±¸·İSRAM
+		//int8_t write_to_backup_sram( uint8_t *data, uint16_t bytes, uint16_t offset );//Ğ´ï¿½ï¿½ï¿½İµï¿½ï¿½ï¿½ï¿½ï¿½SRAM
 		//write_to_backup_sram(wrdata2,10,0);
 		delay_ms(500);
-		for (i = 0; i < 10; i++)rddata[i] = 0;
-		//int8_t read_from_backup_sram(uint8_t *data, uint16_t bytes, uint16_t offset);//´Ó±¸·İSRAM¶ÁÈ¡Êı¾İ
+		for (i = 0; i < 10; i++)
+			rddata[i] = 0;
+		//int8_t read_from_backup_sram(uint8_t *data, uint16_t bytes, uint16_t offset);//ï¿½Ó±ï¿½ï¿½ï¿½SRAMï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 		read_from_backup_sram(rddata, 10, 0);
 		delay_ms(500);
 	}
 
-	//2-²âÊÔLEDºÍSPK
+	//2-ï¿½ï¿½ï¿½ï¿½LEDï¿½ï¿½SPK
 	while (0)
 	{
 		LED1_ON;
@@ -58,7 +59,7 @@ void Test(void)
 		delay_ms(1000);
 	}
 
-	//3-´®¿Ú5
+	//3-ï¿½ï¿½ï¿½ï¿½5
 	while (0)
 	{
 		uart5_send_byte('A');
@@ -67,44 +68,45 @@ void Test(void)
 		delay_ms(1000);
 	}
 
-	//4-´®¿Ú6
+	//4-ï¿½ï¿½ï¿½ï¿½6
 	while (0)
 	{
 		usart6_send_byte('A');
 		delay_ms(500);
 	}
 
-	//5-Ğ¡³µ²âÊÔ
+	//5-Ğ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	while (0)
 	{
-		MotorMove(ID_XIAOCHE, 1);	//ÏòÇ°
+		MotorMove(ID_XIAOCHE, 1); //ï¿½ï¿½Ç°
 		delay_ms(5000);
-		MotorMove(ID_XIAOCHE, 3);	//Í£Ö¹
+		MotorMove(ID_XIAOCHE, 3); //Í£Ö¹
 		delay_ms(5000);
-		MotorMove(ID_XIAOCHE, 2);	//Ïòºó
+		MotorMove(ID_XIAOCHE, 2); //ï¿½ï¿½ï¿½
 		delay_ms(5000);
-		MotorMove(ID_XIAOCHE, 3);	//Í£Ö¹
+		MotorMove(ID_XIAOCHE, 3); //Í£Ö¹
 		delay_ms(5000);
 
-		MotorMove(ID_DALIANG, 1);	//ÏòÇ°
+		MotorMove(ID_DALIANG, 1); //ï¿½ï¿½Ç°
 		delay_ms(5000);
-		MotorMove(ID_DALIANG, 3);	//Í£Ö¹
+		MotorMove(ID_DALIANG, 3); //Í£Ö¹
 		delay_ms(5000);
-		MotorMove(ID_DALIANG, 2);	//Ïòºó
+		MotorMove(ID_DALIANG, 2); //ï¿½ï¿½ï¿½
 		delay_ms(5000);
-		MotorMove(ID_DALIANG, 3);	//Í£Ö¹
+		MotorMove(ID_DALIANG, 3); //Í£Ö¹
 		delay_ms(5000);
 	}
 
-	while (0)	//ÒÆ¶¯µ½Ö¸¶¨Î»ÖÃ
+	while (0) //ï¿½Æ¶ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Î»ï¿½ï¿½
 	{
 		MotorToPosition(ID_XIAOCHE, 60);
 		delay_ms(1000);
 		MotorToPosition(ID_DALIANG, 60);
-		while (1);
+		while (1)
+			;
 	}
 
-	while (0)	//×ø±êÇåÁã
+	while (0) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		i = MotorToZero(ID_XIAOCHE);
 		if (i)
@@ -113,10 +115,11 @@ void Test(void)
 			delay_ms(500);
 			BEEP_OFF;
 		}
-		while (1);
+		while (1)
+			;
 	}
 
-	while (0)	//¶ÁÈ¡×ø±êÎ»ÖÃ
+	while (0) //ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 	{
 		i = ReadStatus(ID_XIAOCHE);
 		if (i)
@@ -148,18 +151,7 @@ void Test(void)
 		delay_ms(3000);
 	}
 
-	//Å¦¿Ûµç³ØµçÑ¹¼ì²â
-	while (1)
+		while (1)
 	{
 		SendBatteryVoltage(2);
 	}
-
-	/*while (1)
-	{
-		DebugMsg("iµÄµ±Ç°ÖµÎª£º");
-		DebugNum(100);
-		DebugMsg("\r\n");
-		delay_ms(2000);
-	}*/
-}
-
