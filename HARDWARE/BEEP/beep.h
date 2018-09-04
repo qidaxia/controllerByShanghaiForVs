@@ -2,14 +2,14 @@
 #define __BEEP_H	 
 #include "sys.h" 
 
-//BEEP¶Ë¿Ú¶¨Òå,PA13
+//BEEPç«¯å£å®šä¹‰,PA13
 
 #define BEEP_ON     GPIO_SetBits(GPIOA,GPIO_Pin_1); 
 #define BEEP_OFF    GPIO_ResetBits(GPIOA,GPIO_Pin_1); 
-void BEEP_Init(void);//³õÊ¼»¯
-void BeepOne(void);//ÏìÒ»Éù
-void BeepTwo(void);//ÏìÁ½Éù
-void BeepThree(void);//ÏìÁ½³¤Ò»¶Ì
+void BEEP_Init(void);//åˆå§‹åŒ–
+void BeepOne(void);//å“ä¸€å£°
+void BeepTwo(void);//å“ä¸¤å£°
+void BeepThree(void);//å“ä¸¤é•¿ä¸€çŸ­
 #endif
 
 

@@ -1,17 +1,14 @@
 #ifndef __USART6_H
 #define __USART6_H
 #include "stm32f4xx_conf.h"
-#include "sys.h" 
-#include "stdio.h"
+#include "sys.h"
 
-#define USART6_RCV_LEN  			30  	//¶¨Òå×î´ó½ÓÊÕ×Ö½ÚÊı 20
+#define USART6_RCV_LEN 30 //å®šä¹‰æœ€å¤§æ¥æ”¶å­—èŠ‚æ•° 20
 
-extern uint8_t USART6_RX_BUF[USART6_RCV_LEN];     //½ÓÊÕ»º³å
+extern uint8_t USART6_RX_BUF[USART6_RCV_LEN]; //æ¥æ”¶ç¼“å†²
 extern uint8_t Usart6_rcv_index;
 
 void usart6_init(u32 bound);
-void usart6_send_byte(uint8_t ch);			//´®¿Ú6·¢ËÍ
+void usart6_send_byte(uint8_t ch); //ä¸²å£6å‘é€
 
 #endif
-
-

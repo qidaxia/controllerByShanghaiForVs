@@ -1,6 +1,6 @@
 /*
-´®¿ÚÄ£¿éÊý¾Ý´¦Àí
-¿ÉÒÔ´¦Àí´®¿Ú2µÄWIFIÊý¾ÝºÍ´®¿Ú5µÄÒÔÌ«ÍøÊý¾Ý
+ä¸²å£æ¨¡å—æ•°æ®å¤„ç†
+å¯ä»¥å¤„ç†ä¸²å£2çš„WIFIæ•°æ®å’Œä¸²å£5çš„ä»¥å¤ªç½‘æ•°æ®
 
 */
 #include "delay.h"
@@ -22,39 +22,39 @@ extern void SendConfig(uint8_t com)
 {
 	uint8_t send_buf[50];
 
-	send_buf[0] = 0x0C;		//ÃüÁîÂë
-	send_buf[1] = RTC_DateStruct.RTC_Year + 2000;		//Äê4Î»£¬LSB
+	send_buf[0] = 0x0C;		//å‘½ä»¤ç 
+	send_buf[1] = RTC_DateStruct.RTC_Year + 2000;		//å¹´4ä½ï¼ŒLSB
 	send_buf[2] = (RTC_DateStruct.RTC_Year + 2000) >> 8;
 	send_buf[3] = 0;
 	send_buf[4] = 0;
-	send_buf[5] = RTC_DateStruct.RTC_Month;			//ÔÂ
-	send_buf[6] = RTC_DateStruct.RTC_Date;			//ÈÕ
-	send_buf[7] = RTC_TimeStruct.RTC_Hours;			//Ê±
-	send_buf[8] = RTC_TimeStruct.RTC_Minutes;		//·Ö
-	send_buf[9] = RTC_TimeStruct.RTC_Seconds;		//Ãë
-	send_buf[10] = RTC_DateStruct.RTC_WeekDay;	//ÐÇÆÚ
+	send_buf[5] = RTC_DateStruct.RTC_Month;			//æœˆ
+	send_buf[6] = RTC_DateStruct.RTC_Date;			//æ—¥
+	send_buf[7] = RTC_TimeStruct.RTC_Hours;			//æ—¶
+	send_buf[8] = RTC_TimeStruct.RTC_Minutes;		//åˆ†
+	send_buf[9] = RTC_TimeStruct.RTC_Seconds;		//ç§’
+	send_buf[10] = RTC_DateStruct.RTC_WeekDay;	//æ˜ŸæœŸ
 	send_buf[11] = 0x20;
-	send_buf[12] = (uint8_t)paulseStyle;					//Âö³å·½Ê½
+	send_buf[12] = (uint8_t)paulseStyle;					//è„‰å†²æ–¹å¼
 	send_buf[13] = 0x20;
-	send_buf[14] = scanStartTime.Hour;								 //ÆðÊ¼Ê±¼ä£ºÊ±
-	send_buf[15] = scanStartTime.Minute;							 //ÆðÊ¼Ê±¼ä£º·Ö
-	send_buf[16] = scanStopTime.Hour;							 //½áÊøÊ±¼ä£ºÊ±
-	send_buf[17] = scanStopTime.Minute;							 //½áÊøÊ±¼ä£º·Ö
-	send_buf[18] = Scan_Interval;							 //É¨Ãè¼ä¸ô(4¸ö×Ö½Ú LSB)
+	send_buf[14] = scanStartTime.Hour;								 //èµ·å§‹æ—¶é—´ï¼šæ—¶
+	send_buf[15] = scanStartTime.Minute;							 //èµ·å§‹æ—¶é—´ï¼šåˆ†
+	send_buf[16] = scanStopTime.Hour;							 //ç»“æŸæ—¶é—´ï¼šæ—¶
+	send_buf[17] = scanStopTime.Minute;							 //ç»“æŸæ—¶é—´ï¼šåˆ†
+	send_buf[18] = Scan_Interval;							 //æ‰«æé—´éš”(4ä¸ªå­—èŠ‚ LSB)
 	send_buf[19] = Scan_Interval >> 8;
 	send_buf[20] = 0;
 	send_buf[21] = 0;
-	send_buf[22] = (uint8_t)scanRepeatStyle;							//É¨ÃèÖØ¸´·½Ê½	
+	send_buf[22] = (uint8_t)scanRepeatStyle;							//æ‰«æé‡å¤æ–¹å¼	
 	send_buf[23] = 0x20;
-	send_buf[24] = map.Plant_Row;										//ÐÐÊý(4¸ö×Ö½Ú£¬LSB)
+	send_buf[24] = map.Plant_Row;										//è¡Œæ•°(4ä¸ªå­—èŠ‚ï¼ŒLSB)
 	send_buf[25] = map.Plant_Row >> 8;
 	send_buf[26] = 0;
 	send_buf[27] = 0;
-	send_buf[28] = 0xFF;										   //Ô¤Áô(4¸ö×Ö½Ú£¬LSB)
+	send_buf[28] = 0xFF;										   //é¢„ç•™(4ä¸ªå­—èŠ‚ï¼ŒLSB)
 	send_buf[29] = 0xFF;
 	send_buf[30] = 0xFF;
 	send_buf[31] = 0xFF;
-	send_buf[32] = map.Plant_Column;								//ÁÐÊý(4¸ö×Ö½Ú£¬LSB)
+	send_buf[32] = map.Plant_Column;								//åˆ—æ•°(4ä¸ªå­—èŠ‚ï¼ŒLSB)
 	send_buf[33] = map.Plant_Column >> 8;
 	send_buf[34] = 0;
 	send_buf[35] = 0;
@@ -82,8 +82,8 @@ extern void SendBatteryVoltage(uint8_t com)
 	u8 batBuff[4] = { 0x0D,0x00,0x00,0x00 };
 	float batv;
 
-	adc_value = Get_Adc_Average(0, 5); //Å¦¿Ûµç³ØµçÑ¹
-	//batv = adc_value/4096*3300*2;//»ù×¼µçÑ¹3.3V,·Å´ó1000±¶£¬µç×è¶þ·ÖÑ¹
+	adc_value = Get_Adc_Average(0, 5); //çº½æ‰£ç”µæ± ç”µåŽ‹
+	//batv = adc_value/4096*3300*2;//åŸºå‡†ç”µåŽ‹3.3V,æ”¾å¤§1000å€ï¼Œç”µé˜»äºŒåˆ†åŽ‹
 	batv = adc_value * 6600 / 4096;
 	bat_low = (batv >= BAT_THRESHOLD) ? 1 : 2;
 	bat1000 = batv;

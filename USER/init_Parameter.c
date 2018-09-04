@@ -11,85 +11,85 @@
 #include "design.h"
 #include "init_Parameter.h"
 
-uint8_t DebugFlag;		 //µ÷ÊÔÄ£Ê½
-uint8_t WorkStatus;      //¹¤×÷×´Ì¬
-uint8_t BreakFlag;       //ÖĞ¶ÏÖ´ĞĞ±êÖ¾
-uint8_t  PCBreakFlag;	 //ÉÏÎ»»úÖÕÖ¹µ±Ç°ÈÎÎñ
+uint8_t DebugFlag;		 //è°ƒè¯•æ¨¡å¼
+uint8_t WorkStatus;      //å·¥ä½œçŠ¶æ€
+uint8_t BreakFlag;       //ä¸­æ–­æ‰§è¡Œæ ‡å¿—
+uint8_t  PCBreakFlag;	 //ä¸Šä½æœºç»ˆæ­¢å½“å‰ä»»åŠ¡
 
-LEVELMODE paulseStyle;					//Âö³åÊä³ö·½Ê½
-uint16_t Scan_Interval;					//É¨ÃèÊ±¼ä¼ä¸ô£¬µ¥Î»·ÖÖÓ
-uint16_t Scan_Times;					//µ±ÈÕÉ¨Ãè´ÎÊı
-uint8_t  Scan_SW;						//ÈÎÎñÉ¨Ãè¿ª¹Ø
-uint8_t	 Scan_Day;						//É¨ÃèÈÕÆÚ£¬ÈÕÆÚ±ä»¯£¬É¨Ãè´ÎÊıÇåÁã
+LEVELMODE paulseStyle;					//è„‰å†²è¾“å‡ºæ–¹å¼
+uint16_t Scan_Interval;					//æ‰«ææ—¶é—´é—´éš”ï¼Œå•ä½åˆ†é’Ÿ
+uint16_t Scan_Times;					//å½“æ—¥æ‰«ææ¬¡æ•°
+uint8_t  Scan_SW;						//ä»»åŠ¡æ‰«æå¼€å…³
+uint8_t	 Scan_Day;						//æ‰«ææ—¥æœŸï¼Œæ—¥æœŸå˜åŒ–ï¼Œæ‰«ææ¬¡æ•°æ¸…é›¶
 
 RTC_TimeTypeDef RTC_TimeStruct;
 RTC_DateTypeDef RTC_DateStruct;
 
-volatile MOVECMD XiaoChe_Now_Direction;	//0x01ÏòÇ°¡¢0x02Ïòºó£¬0x03Í£Ö¹
+volatile MOVECMD XiaoChe_Now_Direction;	//0x01å‘å‰ã€0x02å‘åï¼Œ0x03åœæ­¢
 volatile uint32_t XiaoChe_Now_Position;
-volatile MOVECMD DaLiang_Now_Direction;	//0x01ÏòÇ°¡¢0x02Ïòºó£¬0x03Í£Ö¹
+volatile MOVECMD DaLiang_Now_Direction;	//0x01å‘å‰ã€0x02å‘åï¼Œ0x03åœæ­¢
 volatile uint32_t DaLiang_Now_Position;
 
 
 
 /*
-³õÊ¼»¯ÔËĞĞ²ÎÊı£¬²¢ÅĞ¶Ï²ÎÊıµÄÓĞĞ§ĞÔ
-RTC_BKP_DR0		RTC³õÊ¼»¯±êÖ¾£¬Èç¹û=0x5050±íÊ¾ÒÑ¾­³õÊ¼»¯¹ıÁË
+åˆå§‹åŒ–è¿è¡Œå‚æ•°ï¼Œå¹¶åˆ¤æ–­å‚æ•°çš„æœ‰æ•ˆæ€§
+RTC_BKP_DR0		RTCåˆå§‹åŒ–æ ‡å¿—ï¼Œå¦‚æœ=0x5050è¡¨ç¤ºå·²ç»åˆå§‹åŒ–è¿‡äº†
 */
 
 extern void init_Parameter(void)
 {
 	uint8_t rd_buf[50], i;
 
-	//1-Ö²ÎïĞĞÊı
+	//1-æ¤ç‰©è¡Œæ•°
 	read_from_backup_sram(rd_buf, 4, 11);
 	map.Plant_Row = rd_buf[3];
-	DebugMsg("Ö²ÎïĞĞÊı£º"); DebugNum(map.Plant_Row); DebugMsg("\r\n");
+	DebugMsg("æ¤ç‰©è¡Œæ•°ï¼š"); DebugNum(map.Plant_Row); DebugMsg("\r\n");
 
-	//2-Ö²ÎïÁĞÊı
+	//2-æ¤ç‰©åˆ—æ•°
 	read_from_backup_sram(rd_buf, 4, 15);
 	map.Plant_Column = (rd_buf[2] << 8) + rd_buf[3];
-	DebugMsg("Ö²ÎïÁĞÊı£º"); DebugNum(map.Plant_Column); DebugMsg("\r\n");
+	DebugMsg("æ¤ç‰©åˆ—æ•°ï¼š"); DebugNum(map.Plant_Column); DebugMsg("\r\n");
 
-	//3-Ö²ÎïĞĞ×ø±ê
+	//3-æ¤ç‰©è¡Œåæ ‡
 	for (i = 0; i < map.Plant_Row; i++)
 	{
 		read_from_backup_sram(rd_buf, 4, BASEADDR_ROW + 4 * i);
 		map.Row[i] = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
-		DebugMsg("µÚ "); DebugNum(i + 1); DebugMsg(" ĞĞ×ø±ê£º "); DebugNum(map.Row[i]); DebugMsg("\r\n");
+		DebugMsg("ç¬¬ "); DebugNum(i + 1); DebugMsg(" è¡Œåæ ‡ï¼š "); DebugNum(map.Row[i]); DebugMsg("\r\n");
 	}
 
-	//4-Ê×ÁĞ×ø±ê
+	//4-é¦–åˆ—åæ ‡
 	read_from_backup_sram(rd_buf, 4, BASEADDR_COL_FIRST);
 	map.Column_First = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
-	DebugMsg("Ê×ÁĞ×ø±ê£º"); DebugNum(map.Column_First); DebugMsg("\r\n");
+	DebugMsg("é¦–åˆ—åæ ‡ï¼š"); DebugNum(map.Column_First); DebugMsg("\r\n");
 
-	//5-×î´óÁĞ×ø±ê
+	//5-æœ€å¤§åˆ—åæ ‡
 	read_from_backup_sram(rd_buf, 4, BASEADDR_COL_LAST);
 	map.Column_Last = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
-	DebugMsg("Ä©ÁĞ×ø±ê£º"); DebugNum(map.Column_Last); DebugMsg("\r\n");
+	DebugMsg("æœ«åˆ—åæ ‡ï¼š"); DebugNum(map.Column_Last); DebugMsg("\r\n");
 
-	//6-¼ÆËãÁĞ¼äÏ¶
+	//6-è®¡ç®—åˆ—é—´éš™
 	if (map.Plant_Column == 1)
 		map.Column_Interval = 0;
 	else if (map.Plant_Column > 1)
 		map.Column_Interval = (map.Column_Last - map.Column_First) / (map.Plant_Column - 1);
-	DebugMsg("ÁĞ¼ä¾à£º"); DebugNum(map.Column_Interval); DebugMsg("\r\n");
+	DebugMsg("åˆ—é—´è·ï¼š"); DebugNum(map.Column_Interval); DebugMsg("\r\n");
 
-	//7-Âö³åÊä³ö·½Ê½£¬É¨ÃèÆğÊ¼Ê±¼ä£¬É¨Ãè½áÊøÊ±¼ä£¬É¨Ãè¼ä¸ô£¬É¨ÃèÖØ¸´·½Ê½
+	//7-è„‰å†²è¾“å‡ºæ–¹å¼ï¼Œæ‰«æèµ·å§‹æ—¶é—´ï¼Œæ‰«æç»“æŸæ—¶é—´ï¼Œæ‰«æé—´éš”ï¼Œæ‰«æé‡å¤æ–¹å¼
 	read_from_backup_sram(rd_buf, 11, 67);
-	paulseStyle = (LEVELMODE)rd_buf[0];//Âö³åÊä³ö·½Ê½
-	scanStartTime.Hour = rd_buf[1];			 //ÆğÊ¼Ê±¼ä£ºÊ±
-	scanStartTime.Minute = rd_buf[2];		 //ÆğÊ¼Ê±¼ä£º·Ö
-	scanStopTime.Hour = rd_buf[3];				 //½áÊøÊ±¼ä£ºÊ±
-	scanStopTime.Minute = rd_buf[4];			 //½áÊøÊ±¼ä£º·Ö
-	Scan_Interval = rd_buf[5] + (rd_buf[6] << 8) + (rd_buf[7] << 16) + (rd_buf[8] << 24); //É¨ÃèÊ±¼ä¼ä¸ô
-	scanRepeatStyle = (ScanRepeatStyle)rd_buf[9];	//É¨ÃèÖØ¸´·½Ê½
-	Scan_SW = rd_buf[10];	//ÈÎÎñ×Ü¿ª¹Ø
+	paulseStyle = (LEVELMODE)rd_buf[0];//è„‰å†²è¾“å‡ºæ–¹å¼
+	scanStartTime.Hour = rd_buf[1];			 //èµ·å§‹æ—¶é—´ï¼šæ—¶
+	scanStartTime.Minute = rd_buf[2];		 //èµ·å§‹æ—¶é—´ï¼šåˆ†
+	scanStopTime.Hour = rd_buf[3];				 //ç»“æŸæ—¶é—´ï¼šæ—¶
+	scanStopTime.Minute = rd_buf[4];			 //ç»“æŸæ—¶é—´ï¼šåˆ†
+	Scan_Interval = rd_buf[5] + (rd_buf[6] << 8) + (rd_buf[7] << 16) + (rd_buf[8] << 24); //æ‰«ææ—¶é—´é—´éš”
+	scanRepeatStyle = (ScanRepeatStyle)rd_buf[9];	//æ‰«æé‡å¤æ–¹å¼
+	Scan_SW = rd_buf[10];	//ä»»åŠ¡æ€»å¼€å…³
 
-	Scan_Times = 0;				//µ±ÈÕÉ¨Ãè´ÎÊı
-	Scan_Day = 0;					//µ±ÈÕÉ¨ÃèÈÕÆÚ
-	nextScanTime.Hour = 0;		//ÏÂ´ÎÉ¨ÃèÊ±¼ä
+	Scan_Times = 0;				//å½“æ—¥æ‰«ææ¬¡æ•°
+	Scan_Day = 0;					//å½“æ—¥æ‰«ææ—¥æœŸ
+	nextScanTime.Hour = 0;		//ä¸‹æ¬¡æ‰«ææ—¶é—´
 	nextScanTime.Minute = 0;
 
 }

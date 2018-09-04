@@ -2,16 +2,16 @@
 #define __RTC_H	 
 #include "sys.h" 
 
-u8 My_RTC_Init(void);						//RTC³õÊ¼»¯
-ErrorStatus RTC_Set_Time(u8 hour,u8 min,u8 sec,u8 ampm);	//RTCÊ±¼äÉèÖÃ
-ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week); 	//RTCÈÕÆÚÉèÖÃ
-void RTC_Set_AlarmA(u8 date,u8 hour,u8 min,u8 sec);		//ÉèÖÃÄÖÖÓÊ±¼ä
-void RTC_Set_WakeUp(u32 wksel,u16 cnt);				//ÖÜÆÚĞÔ»½ĞÑ¶¨Ê±Æ÷ÉèÖÃ
+u8 My_RTC_Init(void);						//RTCåˆå§‹åŒ–
+ErrorStatus RTC_Set_Time(u8 hour,u8 min,u8 sec,u8 ampm);	//RTCæ—¶é—´è®¾ç½®
+ErrorStatus RTC_Set_Date(u8 year,u8 month,u8 date,u8 week); 	//RTCæ—¥æœŸè®¾ç½®
+void RTC_Set_AlarmA(u8 date,u8 hour,u8 min,u8 sec);		//è®¾ç½®é—¹é’Ÿæ—¶é—´
+void RTC_Set_WakeUp(u32 wksel,u16 cnt);				//å‘¨æœŸæ€§å”¤é†’å®šæ—¶å™¨è®¾ç½®
 
-int8_t write_to_backup_sram( uint8_t *data, uint16_t bytes, uint16_t offset );//Ğ´Êı¾İµ½±¸·İSRAM
-int8_t read_from_backup_sram(uint8_t *data, uint16_t bytes, uint16_t offset);//´Ó±¸·İSRAM¶ÁÈ¡Êı¾İ
-int8_t write_to_backup_rtc( uint32_t *data, uint16_t bytes, uint16_t offset );//Ğ´±¸·İRTC¼Ä´æÆ÷
-int8_t read_from_backup_rtc( uint32_t *data, uint16_t bytes, uint16_t offset );//¶Á±¸·İRTC¼Ä´æÆ÷
+int8_t write_to_backup_sram( uint8_t *data, uint16_t bytes, uint16_t offset );//å†™æ•°æ®åˆ°å¤‡ä»½SRAM
+int8_t read_from_backup_sram(uint8_t *data, uint16_t bytes, uint16_t offset);//ä»å¤‡ä»½SRAMè¯»å–æ•°æ®
+int8_t write_to_backup_rtc( uint32_t *data, uint16_t bytes, uint16_t offset );//å†™å¤‡ä»½RTCå¯„å­˜å™¨
+int8_t read_from_backup_rtc( uint32_t *data, uint16_t bytes, uint16_t offset );//è¯»å¤‡ä»½RTCå¯„å­˜å™¨
 
 #endif
 

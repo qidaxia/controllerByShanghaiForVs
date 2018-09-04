@@ -7,7 +7,7 @@
 #include "delay.h"
 #include "rtc.h"
 
-//ºÍPCÍ¨ĞÅÅäÖÃÏà¹Øº¯Êı
+//å’ŒPCé€šä¿¡é…ç½®ç›¸å…³å‡½æ•°
 #define	COMM_HEAD1	0x73	//start
 #define	COMM_HEAD2	0x74
 #define	COMM_HEAD3	0x61
@@ -24,11 +24,11 @@
 #define BASEADDR_COL_LAST	63
 #define BASEADDR_COLUMN_BIT	100
 
-#define PRECISION	30			//30¸öÂö³åÎó²î
-#define DALIANG_TIMEOUT	600		//´óÁºÔË¶¯³¬Ê±
-#define XIAOCHE_TIMEOUT 200		//Ğ¡³µÔË¶¯³¬Ê±
-//Ö²ÎïÉ¨ÃèÅäÖÃÏà¹Ø²ÎÊı
-#define CAMERATIME	1							//°´Î»É¨ÃèÏà»úÔİÍ£Ê±¼ä
+#define PRECISION	30			//30ä¸ªè„‰å†²è¯¯å·®
+#define DALIANG_TIMEOUT	600		//å¤§æ¢è¿åŠ¨è¶…æ—¶
+#define XIAOCHE_TIMEOUT 200		//å°è½¦è¿åŠ¨è¶…æ—¶
+//æ¤ç‰©æ‰«æé…ç½®ç›¸å…³å‚æ•°
+#define CAMERATIME	1							//æŒ‰ä½æ‰«æç›¸æœºæš‚åœæ—¶é—´
 
 
 typedef enum
@@ -71,9 +71,9 @@ typedef enum
 
 typedef struct
 {
-	uint8_t rcv_flag;		//½ÓÊÕµ½Êı¾İ
-	uint8_t receive_timer;	//½ÓÊÕ³¬Ê±¶¨Ê±Æ÷
-	uint8_t receive_on;		//½ÓÊÕ¶¨Ê±¿ª¹Ø
+	uint8_t rcv_flag;		//æ¥æ”¶åˆ°æ•°æ®
+	uint8_t receive_timer;	//æ¥æ”¶è¶…æ—¶å®šæ—¶å™¨
+	uint8_t receive_on;		//æ¥æ”¶å®šæ—¶å¼€å…³
 }UartManageVarStruct;
 
 extern UartManageVarStruct loraManage;
@@ -92,12 +92,12 @@ extern TIME nextScanTime;
 
 typedef struct
 {
-	uint16_t Plant_Row;	//Ö²ÎïĞĞÊı
-	uint16_t Plant_Column;//Ö²ÎïÁĞÊı
-	uint32_t Row[10];		//ĞĞ×ø±êÖµ
-	uint32_t Column_First;//ÆğÊ¼ÁĞ×ø±ê
-	uint32_t Column_Last; //×î´óÁĞ×ø±ê
-	uint32_t Column_Interval;//ÁĞ¼ä¾à
+	uint16_t Plant_Row;	//æ¤ç‰©è¡Œæ•°
+	uint16_t Plant_Column;//æ¤ç‰©åˆ—æ•°
+	uint32_t Row[10];		//è¡Œåæ ‡å€¼
+	uint32_t Column_First;//èµ·å§‹åˆ—åæ ‡
+	uint32_t Column_Last; //æœ€å¤§åˆ—åæ ‡
+	uint32_t Column_Interval;//åˆ—é—´è·
 }MAP;
 
 extern MAP map;
@@ -119,7 +119,7 @@ typedef enum
 
 }ScanRepeatStyle;
 
-extern ScanRepeatStyle scanRepeatStyle;				//É¨ÃèÖØ¸´·½Ê½
+extern ScanRepeatStyle scanRepeatStyle;				//æ‰«æé‡å¤æ–¹å¼
 
 typedef enum
 {

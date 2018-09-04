@@ -3,14 +3,14 @@
 #include "stm32f4xx_conf.h"
 #include "sys.h" 
 
-#define UART5_REC_LEN  			100  	//¶¨Òå×î´ó½ÓÊÕ×Ö½ÚÊı
+#define UART5_REC_LEN  			100  	//å®šä¹‰æœ€å¤§æ¥æ”¶å­—èŠ‚æ•°
 
-extern uint8_t  Uart5_rcv_flag;			//´®¿Ú5½ÓÊÕµ½Êı¾İ
-extern u8  UART5_RX_BUF[UART5_REC_LEN]; //½ÓÊÕ»º³å,×î´óUART5_REC_LEN¸ö×Ö½Ú.Ä©×Ö½ÚÎª»»ĞĞ·û 
+extern uint8_t  Uart5_rcv_flag;			//ä¸²å£5æ¥æ”¶åˆ°æ•°æ®
+extern u8  UART5_RX_BUF[UART5_REC_LEN]; //æ¥æ”¶ç¼“å†²,æœ€å¤§UART5_REC_LENä¸ªå­—èŠ‚.æœ«å­—èŠ‚ä¸ºæ¢è¡Œç¬¦ 
 extern u8 UART5_BUF_Index; 
 void uart5_init(u32 bound);
 
-void uart5_send_byte(uint8_t ch);			//´®¿Ú5·¢ËÍº¯Êı
+void uart5_send_byte(uint8_t ch);			//ä¸²å£5å‘é€å‡½æ•°
 
 #endif
 

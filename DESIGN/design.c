@@ -104,7 +104,7 @@ extern void DebugNum(uint32_t num)
 
 extern int fputc(int ch, FILE *f)
 {
-	while ((USART6->SR & 0X40) == 0);//Ñ­»··¢ËÍ,Ö±µ½·¢ËÍÍê±Ï   
+	while ((USART6->SR & 0X40) == 0);//å¾ªç¯å‘é€,ç›´åˆ°å‘é€å®Œæ¯•   
 	USART6->DR = (u8)ch;
 	return ch;
 }
@@ -131,7 +131,7 @@ extern void clearReciveBuf(DEVICE com)
 }
 
 
-//Ñ°ÕÒÃüÁîÍ·£¬Ê§°Ü·µ»Ø0xff,³É¹¦·µ»Ø¶ÔÓ¦µÄË÷Òı£¨sËùÔÚµÄË÷Òı£©
+//å¯»æ‰¾å‘½ä»¤å¤´ï¼Œå¤±è´¥è¿”å›0xff,æˆåŠŸè¿”å›å¯¹åº”çš„ç´¢å¼•ï¼ˆsæ‰€åœ¨çš„ç´¢å¼•ï¼‰
 static u8 searchCMDHead(DEVICE com, u8 len)
 {
 	u8 i = 0;
@@ -156,31 +156,31 @@ extern uint8_t * getCmdFrame(DEVICE com, uint8_t *cmd)
 	u8 *dataStr = (void *)0;
 
 	*cmd = 0xff;
-	if (len < 9)//Êı¾İ²»ÍêÕû
+	if (len < 9)//æ•°æ®ä¸å®Œæ•´
 	{
 		return dataStr;
 	}
-	if (len > 100)//´íÎóÊı¾İ
+	if (len > 100)//é”™è¯¯æ•°æ®
 	{
 		clearReciveBuf(com);
 		return dataStr;
 	}
 	dataStr = com == wifi ? USART2_RX_BUF : USART6_RX_BUF;
 
-	//ÑéÖ¤ÃüÁîÎ²
+	//éªŒè¯å‘½ä»¤å°¾
 	if (dataStr[len - 1] == 'd'&&dataStr[len - 2] == 'n'&&dataStr[len - 3] == 'e')
 	{
-		//Ñ°ÕÒÃüÁîÍ·
+		//å¯»æ‰¾å‘½ä»¤å¤´
 		headIndex = searchCMDHead(com, len);
-		if (headIndex != 0xff)//ÕÒµ½ÁË
+		if (headIndex != 0xff)//æ‰¾åˆ°äº†
 		{
 			BeepOne();
 			*cmd = dataStr[headIndex + 5];
 		}
-		//Êı¾İ²»ÍêÕû£¬»ò´¦ÀíÍê³É£¬ÔòÖØĞÂ¿ªÊ¼½ÓÊÕ
+		//æ•°æ®ä¸å®Œæ•´ï¼Œæˆ–å¤„ç†å®Œæˆï¼Œåˆ™é‡æ–°å¼€å§‹æ¥æ”¶
 		clearReciveBuf(com);
 	}
-	else//ÑéÖ¤ÃüÁîÎ²²»Í¨¹ı£¬ÖØĞÂ½ÓÊÕ
+	else//éªŒè¯å‘½ä»¤å°¾ä¸é€šè¿‡ï¼Œé‡æ–°æ¥æ”¶
 	{
 		clearReciveBuf(com);
 	}
@@ -197,8 +197,8 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 	}
 	switch (cmd)
 	{
-		//1-ÉèÖÃÈÕÆÚºÍÊ±¼ä
-	case 0x0A: //Äê(67),ÔÂ(8),ÈÕ(9),Ê±(10),·Ö(11),Ãë(12),ĞÇÆÚ(13)£¨ÖÜÈÕÎª7£©
+		//1-è®¾ç½®æ—¥æœŸå’Œæ—¶é—´
+	case 0x0A: //å¹´(67),æœˆ(8),æ—¥(9),æ—¶(10),åˆ†(11),ç§’(12),æ˜ŸæœŸ(13)ï¼ˆå‘¨æ—¥ä¸º7ï¼‰
 			   //RTC_Set_Date(u8 year,u8 month,u8 date,u8 week)	
 		PWR_BackupAccessCmd(ENABLE);
 		RTC_Set_Date((*(dataStr + 1) + (*(dataStr + 2) << 8)) - 2000, *(dataStr + 3), *(dataStr + 4), *(dataStr + 8));
@@ -208,32 +208,32 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 		SendBack(com, IS_OK);
 		break;
 
-		//2-µØÍ¼ÉèÖÃ£¨ĞĞÊı£¬ÁĞÊı£©
-	case 0x0C://ĞĞÊı(4¸ö×Ö½Ú£¬LSB),ÁĞÊı(4¸ö×Ö½Ú£¬LSB)
+		//2-åœ°å›¾è®¾ç½®ï¼ˆè¡Œæ•°ï¼Œåˆ—æ•°ï¼‰
+	case 0x0C://è¡Œæ•°(4ä¸ªå­—èŠ‚ï¼ŒLSB),åˆ—æ•°(4ä¸ªå­—èŠ‚ï¼ŒLSB)
 		write_ram_buf[0] = 0;
 		write_ram_buf[1] = 0;
 		write_ram_buf[2] = *(dataStr + 2);
 		write_ram_buf[3] = *(dataStr + 1);
 		map.Plant_Row = (*(dataStr + 2) << 8) + *(dataStr + 1);
-		write_to_backup_sram(write_ram_buf, 4, 11); //ĞĞÊı
+		write_to_backup_sram(write_ram_buf, 4, 11); //è¡Œæ•°
 
 		write_ram_buf[0] = 0;
 		write_ram_buf[1] = 0;
 		write_ram_buf[2] = *(dataStr + 6);
 		write_ram_buf[3] = *(dataStr + 5);
 		map.Plant_Column = (*(dataStr + 6) << 8) + *(dataStr + 5);
-		write_to_backup_sram(write_ram_buf, 4, 15); //ÁĞÊı
+		write_to_backup_sram(write_ram_buf, 4, 15); //åˆ—æ•°
 		SendBack(com, IS_OK);
 		if (map.Plant_Column == 1)
 			map.Column_Interval = 0;
 		else if (map.Plant_Column > 1)
 			map.Column_Interval = (map.Column_Last - map.Column_First) / (map.Plant_Column - 1);
-		DebugMsg("ÁĞ¼ä¾à£º");
+		DebugMsg("åˆ—é—´è·ï¼š");
 		DebugNum(map.Column_Interval);
 		DebugMsg("\r\n");
 		break;
 
-		//3-µØÍ¼ĞĞ±ê¶¨£¬µ±Ç°Î»ÖÃÎªÖ¸¶¨ĞĞºÅµÄ×ø±ê
+		//3-åœ°å›¾è¡Œæ ‡å®šï¼Œå½“å‰ä½ç½®ä¸ºæŒ‡å®šè¡Œå·çš„åæ ‡
 	case 0x01:
 		if (ReadStatus(ID_XIAOCHE))
 		{
@@ -241,7 +241,7 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 			write_ram_buf[1] = XiaoChe_Now_Position >> 16;
 			write_ram_buf[2] = XiaoChe_Now_Position >> 8;
 			write_ram_buf[3] = XiaoChe_Now_Position;
-			write_to_backup_sram(write_ram_buf, 4, BASEADDR_ROW + 4 * (*(dataStr + 1) - 1)); //ĞĞ×ø±ê
+			write_to_backup_sram(write_ram_buf, 4, BASEADDR_ROW + 4 * (*(dataStr + 1) - 1)); //è¡Œåæ ‡
 			SendBackValue(com, XiaoChe_Now_Position);
 		}
 		else
@@ -249,7 +249,7 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 			SendBack(com, IS_ERROR);
 		}
 		break;
-		//4-µØÍ¼ÁĞ±ê¶¨£¬µ±Ç°Î»ÖÃÎªÆğÊ¼ÁĞ»ò×î´óÁĞµÄ×ø±ê
+		//4-åœ°å›¾åˆ—æ ‡å®šï¼Œå½“å‰ä½ç½®ä¸ºèµ·å§‹åˆ—æˆ–æœ€å¤§åˆ—çš„åæ ‡
 	case 0x02:
 		if (ReadStatus(ID_DALIANG))
 		{
@@ -260,15 +260,15 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 
 			if (*(dataStr + 1) == 0x01)
 			{
-				map.Column_First = DaLiang_Now_Position;//ÆğÊ¼ÁĞ×ø±ê
-				write_to_backup_sram(write_ram_buf, 4, BASEADDR_COL_FIRST); //ÁĞÊı
+				map.Column_First = DaLiang_Now_Position;//èµ·å§‹åˆ—åæ ‡
+				write_to_backup_sram(write_ram_buf, 4, BASEADDR_COL_FIRST); //åˆ—æ•°
 				SendBackValue(com, map.Column_First);
 				map.Column_Interval = (map.Column_Last - map.Column_First) / map.Plant_Column;
 			}
 			else if (*(dataStr + 1) == 0x02)
 			{
-				map.Column_Last = DaLiang_Now_Position;//×î´óÁĞ×ø±ê
-				write_to_backup_sram(write_ram_buf, 4, BASEADDR_COL_LAST); //ÁĞÊı
+				map.Column_Last = DaLiang_Now_Position;//æœ€å¤§åˆ—åæ ‡
+				write_to_backup_sram(write_ram_buf, 4, BASEADDR_COL_LAST); //åˆ—æ•°
 				SendBackValue(com, map.Column_Last);
 				map.Column_Interval = (map.Column_Last - map.Column_First) / map.Plant_Column;
 			}
@@ -283,79 +283,79 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 		}
 		break;
 
-		//5-¶¯×÷¿ØÖÆ
+		//5-åŠ¨ä½œæ§åˆ¶
 	case 0x0D:
 		switch (*(dataStr + 1))
 		{
-		case 0x00://Ç°½ø£¨Ğ¡³µÇ°½ø£¬Y±ä´ó£©
+		case 0x00://å‰è¿›ï¼ˆå°è½¦å‰è¿›ï¼ŒYå˜å¤§ï¼‰
 
 			if (MotorMove(ID_XIAOCHE, forward) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x01://ºóÍË£¨Ğ¡³µºóÍË£¬Y±äĞ¡£©
+		case 0x01://åé€€ï¼ˆå°è½¦åé€€ï¼ŒYå˜å°ï¼‰
 			if (MotorMove(ID_XIAOCHE, back) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x02://×ó£¨´óÁººóÍË£¬X±äĞ¡£©
+		case 0x02://å·¦ï¼ˆå¤§æ¢åé€€ï¼ŒXå˜å°ï¼‰
 			if (MotorMove(ID_DALIANG, back) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x03://ÓÒ£¨´óÁºÇ°½ø£¬X±ä´ó£©
+		case 0x03://å³ï¼ˆå¤§æ¢å‰è¿›ï¼ŒXå˜å¤§ï¼‰
 			if (MotorMove(ID_DALIANG, forward) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x04://Í£Ö¹£¨´óÁºĞ¡³µÈ«²¿Í£Ö¹£©
+		case 0x04://åœæ­¢ï¼ˆå¤§æ¢å°è½¦å…¨éƒ¨åœæ­¢ï¼‰
 			if ((uint8_t)MotorMove(ID_DALIANG, stop) + (uint8_t)MotorMove(ID_XIAOCHE, stop) < 2)
 			{
 				SendBack(com, IS_ERROR);
 			}
 			break;
-		case 0x05://½øÈëµ÷ÊÔÄ£Ê½
+		case 0x05://è¿›å…¥è°ƒè¯•æ¨¡å¼
 			DebugFlag = 1;
 			SendBack(com, IS_OK);
 			break;
 
-		case 0x06://ÍË³öµ÷ÊÔÄ£Ê½
+		case 0x06://é€€å‡ºè°ƒè¯•æ¨¡å¼
 			DebugFlag = 0;
 			SendBack(com, IS_OK);
 			break;
 
-		case 0x07://¶ÁÈ¡ÅäÖÃ
+		case 0x07://è¯»å–é…ç½®
 			SendConfig(com);
 			break;
 
-		case 0x08://X´óÁº·µ»ØÔ­µã
+		case 0x08://Xå¤§æ¢è¿”å›åŸç‚¹
 			if (MotorToZero(ID_DALIANG) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x09://YĞ¡³µ·µ»Øµ½Ô­µã
+		case 0x09://Yå°è½¦è¿”å›åˆ°åŸç‚¹
 			if (MotorToZero(ID_XIAOCHE) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x0A://´óÁºµç»ú¸ßËÙ
+		case 0x0A://å¤§æ¢ç”µæœºé«˜é€Ÿ
 			if (ChangeSpeed(highSpeed) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x0B://´óÁºµç»úÖĞËÙ
+		case 0x0B://å¤§æ¢ç”µæœºä¸­é€Ÿ
 			if (ChangeSpeed(middleSpeed) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 
-		case 0x0C://´óÁºµç»úµÍËÙ
+		case 0x0C://å¤§æ¢ç”µæœºä½é€Ÿ
 			if (ChangeSpeed(lowSpeed) == RET_ERR)
 				SendBack(com, IS_ERROR);
 			break;
 		}
 		break;
 
-		//6-ÊÖ¶¯Á¢¼´É¨Ãè¿ØÖÆ
+		//6-æ‰‹åŠ¨ç«‹å³æ‰«ææ§åˆ¶
 	case 0x0F:
 		WorkStatus = 1;
 		SendBack(com, IS_OK);
@@ -378,57 +378,57 @@ extern void handlerFrame(DEVICE com, uint8_t cmd, uint8_t * dataStr)
 		WorkStatus = 0;
 		break;
 
-		//¼Æ»®ÈÎÎñÉ¨Ãè¿ØÖÆ²ÎÊı
+		//è®¡åˆ’ä»»åŠ¡æ‰«ææ§åˆ¶å‚æ•°
 	case 0x0B:
-		paulseStyle = (LEVELMODE)(*(dataStr + 1));//Âö³åÊä³ö·½Ê½
-		scanStartTime.Hour = *(dataStr + 2);				//ÆğÊ¼Ê±¼ä£ºÊ±
-		scanStartTime.Minute = *(dataStr + 3);				//ÆğÊ¼Ê±¼ä£º·Ö
-		scanStopTime.Hour = *(dataStr + 4);					//½áÊøÊ±¼ä£ºÊ±
-		scanStopTime.Minute = *(dataStr + 5);				//½áÊøÊ±¼ä£º·Ö
-		Scan_Interval = *(dataStr + 6) + (*(dataStr + 7) << 8); //É¨ÃèÊ±¼ä¼ä¸ô
-		scanRepeatStyle = (ScanRepeatStyle)*(dataStr + 10);	//É¨ÃèÖØ¸´·½Ê½
+		paulseStyle = (LEVELMODE)(*(dataStr + 1));//è„‰å†²è¾“å‡ºæ–¹å¼
+		scanStartTime.Hour = *(dataStr + 2);				//èµ·å§‹æ—¶é—´ï¼šæ—¶
+		scanStartTime.Minute = *(dataStr + 3);				//èµ·å§‹æ—¶é—´ï¼šåˆ†
+		scanStopTime.Hour = *(dataStr + 4);					//ç»“æŸæ—¶é—´ï¼šæ—¶
+		scanStopTime.Minute = *(dataStr + 5);				//ç»“æŸæ—¶é—´ï¼šåˆ†
+		Scan_Interval = *(dataStr + 6) + (*(dataStr + 7) << 8); //æ‰«ææ—¶é—´é—´éš”
+		scanRepeatStyle = (ScanRepeatStyle)*(dataStr + 10);	//æ‰«æé‡å¤æ–¹å¼
 
-		write_ram_buf[0] =(uint8_t) paulseStyle;					//Âö³åÊä³ö·½Ê½
-		write_ram_buf[1] = scanStartTime.Hour;			//ÆğÊ¼Ê±¼ä£ºÊ±
-		write_ram_buf[2] = scanStartTime.Minute;       //ÆğÊ¼Ê±¼ä£º·Ö
-		write_ram_buf[3] = scanStopTime.Hour;           //½áÊøÊ±¼ä£ºÊ±
-		write_ram_buf[4] = scanStopTime.Minute;         //½áÊøÊ±¼ä£º·Ö
-		write_ram_buf[5] = *(dataStr + 6);					 //É¨ÃèÊ±¼ä¼ä¸ô
+		write_ram_buf[0] =(uint8_t) paulseStyle;					//è„‰å†²è¾“å‡ºæ–¹å¼
+		write_ram_buf[1] = scanStartTime.Hour;			//èµ·å§‹æ—¶é—´ï¼šæ—¶
+		write_ram_buf[2] = scanStartTime.Minute;       //èµ·å§‹æ—¶é—´ï¼šåˆ†
+		write_ram_buf[3] = scanStopTime.Hour;           //ç»“æŸæ—¶é—´ï¼šæ—¶
+		write_ram_buf[4] = scanStopTime.Minute;         //ç»“æŸæ—¶é—´ï¼šåˆ†
+		write_ram_buf[5] = *(dataStr + 6);					 //æ‰«ææ—¶é—´é—´éš”
 		write_ram_buf[6] = *(dataStr + 7);
 		write_ram_buf[7] = *(dataStr + 8);
 		write_ram_buf[8] = *(dataStr + 9);
-		write_ram_buf[9] = *(dataStr + 10);					//É¨ÃèÖØ¸´·½Ê½
-		write_to_backup_sram(write_ram_buf, 10, 67); //Ğ´ÈëÊı¾İRAM
+		write_ram_buf[9] = *(dataStr + 10);					//æ‰«æé‡å¤æ–¹å¼
+		write_to_backup_sram(write_ram_buf, 10, 67); //å†™å…¥æ•°æ®RAM
 		SendBack(com, IS_OK);
 		break;
 
-		//ĞĞÉ¨ÃèÎ»Éè¶¨
+		//è¡Œæ‰«æä½è®¾å®š
 	case 0x03:
 		for (i = 0; i < *(dataStr + 2) + 1; i++)
 		{
-			write_ram_buf[i] = *(dataStr + i + 2);	//Êı¾İ³¤¶Èrcv_buf[6]
+			write_ram_buf[i] = *(dataStr + i + 2);	//æ•°æ®é•¿åº¦rcv_buf[6]
 		}
-		write_to_backup_sram(write_ram_buf, *(dataStr + 2) + 1, BASEADDR_COLUMN_BIT + 40 * (*(dataStr + 1) - 1)); //ÆğÊ¼µØÖ·100,Ã¿ĞĞ×î¶à40×Ö½Ú
-		delay_ms(20);			//ÑÓÊ±µÈ´ıÉÏ´Î²Ù×÷Íê³É
+		write_to_backup_sram(write_ram_buf, *(dataStr + 2) + 1, BASEADDR_COLUMN_BIT + 40 * (*(dataStr + 1) - 1)); //èµ·å§‹åœ°å€100,æ¯è¡Œæœ€å¤š40å­—èŠ‚
+		delay_ms(20);			//å»¶æ—¶ç­‰å¾…ä¸Šæ¬¡æ“ä½œå®Œæˆ
 		SendBack(com, IS_OK);
 		break;
 
-		//¶ÁÈ¡Å¦¿Ûµç³ØµçÑ¹Öµ
+		//è¯»å–çº½æ‰£ç”µæ± ç”µå‹å€¼
 	case 0x04:
 		SendBatteryVoltage(com);
 		break;
 
-		//ÉÏÎ»»úÖÕÖ¹µ±Ç°ÈÎÎñ
+		//ä¸Šä½æœºç»ˆæ­¢å½“å‰ä»»åŠ¡
 	case 0x05:
 		PCBreakFlag = 1;
-		DebugMsg("ÉÏÎ»»úÖÕÖ¹\r\n");
+		DebugMsg("ä¸Šä½æœºç»ˆæ­¢\r\n");
 		break;
 
-		//É¨ÃèÈÎÎñ¿ª¹Ø
+		//æ‰«æä»»åŠ¡å¼€å…³
 	case 0x06:
-		Scan_SW = *(dataStr + 1); 	//²ÎÊı1£º1ÔÊĞíÉ¨Ãè£¬0½ûÖ¹É¨Ãè
+		Scan_SW = *(dataStr + 1); 	//å‚æ•°1ï¼š1å…è®¸æ‰«æï¼Œ0ç¦æ­¢æ‰«æ
 		write_ram_buf[0] = *(dataStr + 1);
-		write_to_backup_sram(write_ram_buf, 1, 77); //×Ô¶¯É¨ÃèÈÎÎñ¿ª¹Ø
+		write_to_backup_sram(write_ram_buf, 1, 77); //è‡ªåŠ¨æ‰«æä»»åŠ¡å¼€å…³
 		SendBack(com, IS_OK);
 		break;
 	}

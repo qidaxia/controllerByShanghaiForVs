@@ -4,20 +4,20 @@
 
 
 extern uint8_t DebugFlag;
-extern u8 WorkStatus;					//¹¤×÷×´Ì¬
-extern u8 BreakFlag;					//ÖĞ¶ÏÖ´ĞĞ±êÖ¾
-extern uint8_t  PCBreakFlag;			//ÉÏÎ»»úÖÕÖ¹µ±Ç°ÈÎÎñ
-extern LEVELMODE paulseStyle;				//Âö³åÊä³ö·½Ê½
-extern uint16_t Scan_Interval;			//É¨ÃèÊ±¼ä¼ä¸ô£¬µ¥Î»·ÖÖÓ
-extern uint16_t Scan_Times;				//µ±ÈÕÉ¨Ãè´ÎÊı
-extern uint8_t  Scan_SW;				//ÈÎÎñÉ¨Ãè¿ª¹Ø
-extern uint8_t	Scan_Day;				//É¨ÃèÈÕÆÚ£¬ÈÕÆÚ±ä»¯£¬É¨Ãè´ÎÊıÇåÁã
+extern u8 WorkStatus;					//å·¥ä½œçŠ¶æ€
+extern u8 BreakFlag;					//ä¸­æ–­æ‰§è¡Œæ ‡å¿—
+extern uint8_t  PCBreakFlag;			//ä¸Šä½æœºç»ˆæ­¢å½“å‰ä»»åŠ¡
+extern LEVELMODE paulseStyle;				//è„‰å†²è¾“å‡ºæ–¹å¼
+extern uint16_t Scan_Interval;			//æ‰«ææ—¶é—´é—´éš”ï¼Œå•ä½åˆ†é’Ÿ
+extern uint16_t Scan_Times;				//å½“æ—¥æ‰«ææ¬¡æ•°
+extern uint8_t  Scan_SW;				//ä»»åŠ¡æ‰«æå¼€å…³
+extern uint8_t	Scan_Day;				//æ‰«ææ—¥æœŸï¼Œæ—¥æœŸå˜åŒ–ï¼Œæ‰«ææ¬¡æ•°æ¸…é›¶
 
 
 extern RTC_TimeTypeDef RTC_TimeStruct;
 extern RTC_DateTypeDef RTC_DateStruct;
 
-extern volatile MOVECMD XiaoChe_Now_Direction;	//0x01ÏòÇ°¡¢0x02Ïòºó£¬0x03Í£Ö¹£¬04¹éÁã¹ı³ÌÖĞ
+extern volatile MOVECMD XiaoChe_Now_Direction;	//0x01å‘å‰ã€0x02å‘åï¼Œ0x03åœæ­¢ï¼Œ04å½’é›¶è¿‡ç¨‹ä¸­
 extern volatile uint32_t XiaoChe_Now_Position;
 extern volatile MOVECMD DaLiang_Now_Direction;
 extern volatile uint32_t DaLiang_Now_Position;

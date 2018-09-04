@@ -1,8 +1,8 @@
 #include "adc.h"
 #include "delay.h"		 
 
-//³õÊ¼»¯ADC
-//ADC3,PA0,Í¨µÀ0
+//åˆå§‹åŒ–ADC
+//ADC3,PA0,é€šé“0
 														   
 void  Adc_Init(void)
 {    
@@ -11,54 +11,54 @@ void  Adc_Init(void)
     ADC_CommonInitTypeDef ADC_CommonInitStructure;
 		ADC_InitTypeDef       ADC_InitStructure;
 	
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//Ê¹ÄÜGPIOAÊ±ÖÓ
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);//Ê¹ÄÜADC3Ê±ÖÓ
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//ä½¿èƒ½GPIOAæ—¶é’Ÿ
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);//ä½¿èƒ½ADC3æ—¶é’Ÿ
 
-    //ÏÈ³õÊ¼»¯IO¿Ú
+    //å…ˆåˆå§‹åŒ–IOå£
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;        //Ä£ÄâÊäÈë
-    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;    //ÎŞÉÏÏÂÀ­
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;        //æ¨¡æ‹Ÿè¾“å…¥
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;    //æ— ä¸Šä¸‹æ‹‰
     GPIO_Init(GPIOA, &GPIO_InitStructure);
  
-		RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC3,ENABLE);	    //ADC3¸´Î»
-		RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC3,DISABLE);	//¸´Î»½áÊø	 
+		RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC3,ENABLE);	    //ADC3å¤ä½
+		RCC_APB2PeriphResetCmd(RCC_APB2Periph_ADC3,DISABLE);	//å¤ä½ç»“æŸ	 
  
-    ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;//¶ÀÁ¢Ä£Ê½
+    ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;//ç‹¬ç«‹æ¨¡å¼
     ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
-    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled; //DMAÊ§ÄÜ
+    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled; //DMAå¤±èƒ½
     ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2; 
     ADC_CommonInit(&ADC_CommonInitStructure);
 	
-    ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;                      //12Î»Ä£Ê½
-    ADC_InitStructure.ADC_ScanConvMode = DISABLE;                               //·ÇÉ¨ÃèÄ£Ê½	
+    ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;                      //12ä½æ¨¡å¼
+    ADC_InitStructure.ADC_ScanConvMode = DISABLE;                               //éæ‰«ææ¨¡å¼	
     ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
-    ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; //½ûÖ¹´¥·¢¼ì²â£¬Ê¹ÓÃÈí¼ş´¥·¢
-    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;                      //ÓÒ¶ÔÆë	
-    ADC_InitStructure.ADC_NbrOfConversion = 1;                                  //1¸ö×ª»»ÔÚ¹æÔòĞòÁĞÖĞ Ò²¾ÍÊÇÖ»×ª»»¹æÔòĞòÁĞ1 
+    ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; //ç¦æ­¢è§¦å‘æ£€æµ‹ï¼Œä½¿ç”¨è½¯ä»¶è§¦å‘
+    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;                      //å³å¯¹é½	
+    ADC_InitStructure.ADC_NbrOfConversion = 1;                                  //1ä¸ªè½¬æ¢åœ¨è§„åˆ™åºåˆ—ä¸­ ä¹Ÿå°±æ˜¯åªè½¬æ¢è§„åˆ™åºåˆ—1 
     ADC_Init(ADC3, &ADC_InitStructure);
  
-		ADC_Cmd(ADC3, ENABLE);//¿ªÆôAD×ª»»Æ÷	 
+		ADC_Cmd(ADC3, ENABLE);//å¼€å¯ADè½¬æ¢å™¨	 
 }
 
 /*
-»ñµÃADCÖµ
-ch:Í¨µÀÖµ 0~16
-·µ»ØÖµ:×ª»»½á¹û
+è·å¾—ADCå€¼
+ch:é€šé“å€¼ 0~16
+è¿”å›å€¼:è½¬æ¢ç»“æœ
 */
 u16 Get_Adc(u8 ch)   
 {
-  //ÉèÖÃÖ¸¶¨ADCµÄ¹æÔò×éÍ¨µÀ£¬Ò»¸öĞòÁĞ£¬²ÉÑùÊ±¼ä
-	ADC_RegularChannelConfig(ADC3, ch, 1, ADC_SampleTime_480Cycles );	//ADC3,ADCÍ¨µÀ,480¸öÖÜÆÚ,Ìá¸ß²ÉÑùÊ±¼ä¿ÉÒÔÌá¸ß¾«È·¶È			    
-	ADC_SoftwareStartConv(ADC3);		                                  //Ê¹ÄÜÖ¸¶¨µÄADC1µÄÈí¼ş×ª»»Æô¶¯¹¦ÄÜ	
-	while(!ADC_GetFlagStatus(ADC3, ADC_FLAG_EOC ));                   //µÈ´ı×ª»»½áÊø
-	return ADC_GetConversionValue(ADC3);	                            //·µ»Ø×î½üÒ»´ÎADC1¹æÔò×éµÄ×ª»»½á¹û
+  //è®¾ç½®æŒ‡å®šADCçš„è§„åˆ™ç»„é€šé“ï¼Œä¸€ä¸ªåºåˆ—ï¼Œé‡‡æ ·æ—¶é—´
+	ADC_RegularChannelConfig(ADC3, ch, 1, ADC_SampleTime_480Cycles );	//ADC3,ADCé€šé“,480ä¸ªå‘¨æœŸ,æé«˜é‡‡æ ·æ—¶é—´å¯ä»¥æé«˜ç²¾ç¡®åº¦			    
+	ADC_SoftwareStartConv(ADC3);		                                  //ä½¿èƒ½æŒ‡å®šçš„ADC1çš„è½¯ä»¶è½¬æ¢å¯åŠ¨åŠŸèƒ½	
+	while(!ADC_GetFlagStatus(ADC3, ADC_FLAG_EOC ));                   //ç­‰å¾…è½¬æ¢ç»“æŸ
+	return ADC_GetConversionValue(ADC3);	                            //è¿”å›æœ€è¿‘ä¸€æ¬¡ADC1è§„åˆ™ç»„çš„è½¬æ¢ç»“æœ
 }
 
 /*
-»ñÈ¡Í¨µÀchµÄ×ª»»Öµ£¬È¡times´Î,È»ºóÆ½¾ù 
-ch:Í¨µÀ±àºÅ
-times:»ñÈ¡´ÎÊı
-·µ»ØÖµ:Í¨µÀchµÄtimes´Î×ª»»½á¹ûÆ½¾ùÖµ
+è·å–é€šé“chçš„è½¬æ¢å€¼ï¼Œå–timesæ¬¡,ç„¶åå¹³å‡ 
+ch:é€šé“ç¼–å·
+times:è·å–æ¬¡æ•°
+è¿”å›å€¼:é€šé“chçš„timesæ¬¡è½¬æ¢ç»“æœå¹³å‡å€¼
 */
 u16 Get_Adc_Average(u8 ch,u8 times)
 {

@@ -2,15 +2,15 @@
 #define __LED_H
 #include "sys.h"
 
-//LED¶Ë¿Ú¶¨Òå
-#define LED1_ON 	GPIO_ResetBits(GPIOE,GPIO_Pin_8);	//PE8ÉèÖÃµÍ£¬»ÆµÆÁÁ
-#define LED1_OFF 	GPIO_SetBits(GPIOE,GPIO_Pin_8);		//PE8ÉèÖÃ¸ß£¬»ÆµÆÃğ
-#define LED1_BLINK	GPIO_ToggleBits(GPIOE,GPIO_Pin_8);//LED1»ÆµÆÉÁË¸
+//LEDç«¯å£å®šä¹‰
+#define LED1_ON 	GPIO_ResetBits(GPIOE,GPIO_Pin_8);	//PE8è®¾ç½®ä½ï¼Œé»„ç¯äº®
+#define LED1_OFF 	GPIO_SetBits(GPIOE,GPIO_Pin_8);		//PE8è®¾ç½®é«˜ï¼Œé»„ç¯ç­
+#define LED1_BLINK	GPIO_ToggleBits(GPIOE,GPIO_Pin_8);//LED1é»„ç¯é—ªçƒ
 
-#define LED2_ON 	GPIO_ResetBits(GPIOE,GPIO_Pin_9);	//PE9ÉèÖÃµÍ£¬À¶µÆÁÁ
-#define LED2_OFF 	GPIO_SetBits(GPIOE,GPIO_Pin_9);		//PE9ÉèÖÃ¸ß£¬À¶µÆÃğ
-#define LED2_BLINK	GPIO_ToggleBits(GPIOE,GPIO_Pin_9);//LED2À¶µÆÉÁË¸
+#define LED2_ON 	GPIO_ResetBits(GPIOE,GPIO_Pin_9);	//PE9è®¾ç½®ä½ï¼Œè“ç¯äº®
+#define LED2_OFF 	GPIO_SetBits(GPIOE,GPIO_Pin_9);		//PE9è®¾ç½®é«˜ï¼Œè“ç¯ç­
+#define LED2_BLINK	GPIO_ToggleBits(GPIOE,GPIO_Pin_9);//LED2è“ç¯é—ªçƒ
 
-void LED_Init(void);//³õÊ¼»¯	
+void LED_Init(void);//åˆå§‹åŒ–	
 
 #endif

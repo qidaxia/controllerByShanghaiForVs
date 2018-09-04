@@ -2,26 +2,26 @@
 #include "delay.h"
 
 /*
-³õÊ¼»¯PA1ÎªÊä³ö¿Ú		    
-BEEP IO³õÊ¼»¯
+åˆå§‹åŒ–PA1ä¸ºè¾“å‡ºå£		    
+BEEP IOåˆå§‹åŒ–
 */
 void BEEP_Init(void)
 {   
   GPIO_InitTypeDef  GPIO_InitStructure;
 
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//Ê¹ÄÜGPIOAÊ±ÖÓ
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//ä½¿èƒ½GPIOAæ—¶é’Ÿ
   
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;     //ÆÕÍ¨Êä³öÄ£Ê½
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;    //ÍÆÍìÊä³ö
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;     //æ™®é€šè¾“å‡ºæ¨¡å¼
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;    //æ¨æŒ½è¾“å‡º
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;//100MHz
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;  //ÏÂÀ­
-  GPIO_Init(GPIOA, &GPIO_InitStructure);            //³õÊ¼»¯GPIO
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;  //ä¸‹æ‹‰
+  GPIO_Init(GPIOA, &GPIO_InitStructure);            //åˆå§‹åŒ–GPIO
 	
-  GPIO_ResetBits(GPIOA,GPIO_Pin_1);                //·äÃùÆ÷¶ÔÓ¦Òı½ÅGPIOA1
+  GPIO_ResetBits(GPIOA,GPIO_Pin_1);                //èœ‚é¸£å™¨å¯¹åº”å¼•è„šGPIOA1
 }
 
-//ÏìÒ»Éù
+//å“ä¸€å£°
 void BeepOne(void)
 {
 	BEEP_ON;
@@ -29,7 +29,7 @@ void BeepOne(void)
 	BEEP_OFF;
 }
 
-//ÏìÁ½Éù
+//å“ä¸¤å£°
 void BeepTwo(void)
 {
 	BeepOne(); 
@@ -37,7 +37,7 @@ void BeepTwo(void)
 	BeepOne(); 
 }
 
-//ÏìÁ½³¤Ò»¶Ì
+//å“ä¸¤é•¿ä¸€çŸ­
 void BeepThree(void)
 {
 	BEEP_ON;

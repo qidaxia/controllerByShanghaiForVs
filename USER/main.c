@@ -10,26 +10,24 @@
 #include "PlanTask.h"
 #include "init_Parameter.h"
 
-
 int main(void)
 {
 	u8 oldLen = 0;
 	uint8_t cmd = 0xff;
-	uint8_t * dataPtr = (void *)0;
+	uint8_t *dataPtr = (void *)0;
 	DEVICE device = wifi;
-	
+
 	DebugFlag = 0;
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//ÉèÖÃÏµÍ³ÖĞ¶ÏÓÅÏÈ¼¶·Ö×é2
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //è®¾ç½®ç³»ç»Ÿä¸­æ–­ä¼˜å…ˆçº§åˆ†ç»„2
 
-
-	My_RTC_Init();				//³õÊ¼»¯RTC
-	delay_init(168);			//ÑÓÊ±³õÊ¼»¯ 
+	My_RTC_Init();   //åˆå§‹åŒ–RTC
+	delay_init(168); //å»¶æ—¶åˆå§‹åŒ–
 	wifiInit();
 	loraInit();
 	Adc_Init();
-	LED_Init();		  			//³õÊ¼»¯ÓëLEDÁ¬½ÓµÄÓ²¼ş½Ó¿Ú
-	BEEP_Init();					//·äÃùÆ÷³õÊ¼»¯
-	TIM3_Int_Init(10 - 1, 8400 - 1);//¶¨Ê±Æ÷Ê±ÖÓ84M£¬·ÖÆµÏµÊı8400£¬ËùÒÔ84M/8400=10KhzµÄ¼ÆÊıÆµÂÊ£¬¼ÆÊı10´ÎÎª1ms
+	LED_Init();						 //åˆå§‹åŒ–ä¸LEDè¿æ¥çš„ç¡¬ä»¶æ¥å£
+	BEEP_Init();					 //èœ‚é¸£å™¨åˆå§‹åŒ–
+	TIM3_Int_Init(10 - 1, 8400 - 1); //å®šæ—¶å™¨æ—¶é’Ÿ84Mï¼Œåˆ†é¢‘ç³»æ•°8400ï¼Œæ‰€ä»¥84M/8400=10Khzçš„è®¡æ•°é¢‘ç‡ï¼Œè®¡æ•°10æ¬¡ä¸º1ms
 
 	init_Parameter();
 
@@ -39,7 +37,7 @@ int main(void)
 
 	while (1)
 	{
-		//------------------½ÓÊÕÍê³ÉÊı¾İ´¦Àí
+		//------------------æ¥æ”¶å®Œæˆæ•°æ®å¤„ç†
 		if (getReciveLen(device) != 0 && oldLen == getReciveLen(device))
 		{
 			dataPtr = getCmdFrame(device, &cmd);
@@ -55,8 +53,8 @@ int main(void)
 		{
 			PlanTask();
 		}
-		delay_ms(12);//²»¿ÉĞŞ¸Ä
+		delay_ms(12); //ä¸å¯ä¿®æ”¹
 
+		kkg();
 	}
 }
-

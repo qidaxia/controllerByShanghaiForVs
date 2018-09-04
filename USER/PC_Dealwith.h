@@ -1,7 +1,7 @@
 #ifndef PC_DELWITH_HHJ
 #define PC_DELWITH_HHJ
 
-#define BAT_THRESHOLD   220 //µÍÓÚ2.2V±¨¾¯
+#define BAT_THRESHOLD   220 //ä½ŽäºŽ2.2VæŠ¥è­¦
 
 extern void SendConfig(uint8_t com);
 extern void SendBack(uint8_t com, ECHO echoCode);

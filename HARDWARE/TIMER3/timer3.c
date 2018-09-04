@@ -1,5 +1,5 @@
 /*
-Timer3×÷ÎªÏµÍ³¶¨Ê±Æ÷£¬¶¨Ê±¾«¶È1ms
+Timer3ä½œä¸ºç³»ç»Ÿå®šæ—¶å™¨ï¼Œå®šæ—¶ç²¾åº¦1ms
 */
 #include "timer3.h"
 #include "usart2.h"
@@ -7,70 +7,70 @@ Timer3×÷ÎªÏµÍ³¶¨Ê±Æ÷£¬¶¨Ê±¾«¶È1ms
 #include "led.h"
 #include "init_Parameter.h"
 
-uint16_t ledCount = 0;			//ÉÁË¸¶ş¼«¹Ü¶¨Ê±Æ÷
-uint16_t Laser1_send_timer;		//¼¤¹âÄ£¿é1·¢ËÍÃüÁî¶¨Ê±Æ÷
-uint16_t Laser2_send_timer;		//¼¤¹âÄ£¿é2·¢ËÍÃüÁî¶¨Ê±Æ÷
-uint16_t Laser1_receive_timer;	//¼¤¹âÄ£¿é1½ÓÊÕÃüÁî¶¨Ê±Æ÷
-uint16_t Laser2_receive_timer;	//¼¤¹âÄ£¿é2½ÓÊÕÃüÁî¶¨Ê±Æ÷
+uint16_t ledCount = 0;			//é—ªçƒäºŒæç®¡å®šæ—¶å™¨
+uint16_t Laser1_send_timer;		//æ¿€å…‰æ¨¡å—1å‘é€å‘½ä»¤å®šæ—¶å™¨
+uint16_t Laser2_send_timer;		//æ¿€å…‰æ¨¡å—2å‘é€å‘½ä»¤å®šæ—¶å™¨
+uint16_t Laser1_receive_timer;	//æ¿€å…‰æ¨¡å—1æ¥æ”¶å‘½ä»¤å®šæ—¶å™¨
+uint16_t Laser2_receive_timer;	//æ¿€å…‰æ¨¡å—2æ¥æ”¶å‘½ä»¤å®šæ—¶å™¨
 
-uint16_t Uart5_receive_timer;	//´®¿Ú5½ÓÊÕ³¬Ê±¶¨Ê±Æ÷
-uint8_t  Uart5_receive_on;		//´®¿Ú5½ÓÊÕ¶¨Ê±¿ª¹Ø
+uint16_t Uart5_receive_timer;	//ä¸²å£5æ¥æ”¶è¶…æ—¶å®šæ—¶å™¨
+uint8_t  Uart5_receive_on;		//ä¸²å£5æ¥æ”¶å®šæ—¶å¼€å…³
 
-//Í¨ÓÃ¶¨Ê±Æ÷3ÖĞ¶Ï³õÊ¼»¯
-//arr£º×Ô¶¯ÖØ×°Öµ¡£
-//psc£ºÊ±ÖÓÔ¤·ÖÆµÊı
-//¶¨Ê±Æ÷Òç³öÊ±¼ä¼ÆËã·½·¨:Tout=((arr+1)*(psc+1))/Ft us.
-//Ft=¶¨Ê±Æ÷¹¤×÷ÆµÂÊ,µ¥Î»:Mhz
-//ÕâÀïÊ¹ÓÃµÄÊÇ¶¨Ê±Æ÷3!
+//é€šç”¨å®šæ—¶å™¨3ä¸­æ–­åˆå§‹åŒ–
+//arrï¼šè‡ªåŠ¨é‡è£…å€¼ã€‚
+//pscï¼šæ—¶é’Ÿé¢„åˆ†é¢‘æ•°
+//å®šæ—¶å™¨æº¢å‡ºæ—¶é—´è®¡ç®—æ–¹æ³•:Tout=((arr+1)*(psc+1))/Ft us.
+//Ft=å®šæ—¶å™¨å·¥ä½œé¢‘ç‡,å•ä½:Mhz
+//è¿™é‡Œä½¿ç”¨çš„æ˜¯å®šæ—¶å™¨3!
 void TIM3_Int_Init(u16 arr, u16 psc)
 {
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);             ///Ê¹ÄÜTIM3Ê±ÖÓ
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);             ///ä½¿èƒ½TIM3æ—¶é’Ÿ
 
-	TIM_TimeBaseInitStructure.TIM_Period = arr; 	                //×Ô¶¯ÖØ×°ÔØÖµ
-	TIM_TimeBaseInitStructure.TIM_Prescaler = psc;                    //¶¨Ê±Æ÷·ÖÆµ
-	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;   //ÏòÉÏ¼ÆÊıÄ£Ê½
+	TIM_TimeBaseInitStructure.TIM_Period = arr; 	                //è‡ªåŠ¨é‡è£…è½½å€¼
+	TIM_TimeBaseInitStructure.TIM_Prescaler = psc;                    //å®šæ—¶å™¨åˆ†é¢‘
+	TIM_TimeBaseInitStructure.TIM_CounterMode = TIM_CounterMode_Up;   //å‘ä¸Šè®¡æ•°æ¨¡å¼
 	TIM_TimeBaseInitStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 
-	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseInitStructure);              //³õÊ¼»¯TIM3
+	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseInitStructure);              //åˆå§‹åŒ–TIM3
 
-	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);                        //ÔÊĞí¶¨Ê±Æ÷3¸üĞÂÖĞ¶Ï
-	TIM_Cmd(TIM3, ENABLE); //Ê¹ÄÜ¶¨Ê±Æ÷3
+	TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);                        //å…è®¸å®šæ—¶å™¨3æ›´æ–°ä¸­æ–­
+	TIM_Cmd(TIM3, ENABLE); //ä½¿èƒ½å®šæ—¶å™¨3
 
-	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;                   //¶¨Ê±Æ÷3ÖĞ¶Ï
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;      //ÇÀÕ¼ÓÅÏÈ¼¶1
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x03;             //×ÓÓÅÏÈ¼¶3
+	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;                   //å®šæ—¶å™¨3ä¸­æ–­
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;      //æŠ¢å ä¼˜å…ˆçº§1
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x03;             //å­ä¼˜å…ˆçº§3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
 }
 
-//¶¨Ê±Æ÷3ÖĞ¶Ï·şÎñº¯Êı
+//å®šæ—¶å™¨3ä¸­æ–­æœåŠ¡å‡½æ•°
 void TIM3_IRQHandler(void)
 {
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET) //Òç³öÖĞ¶Ï
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) == SET) //æº¢å‡ºä¸­æ–­
 	{
-		//1-ºôÎüµÆÉÁË¸
-		if (++ledCount >= 500)	//500msÉÁË¸
+		//1-å‘¼å¸ç¯é—ªçƒ
+		if (++ledCount >= 500)	//500msé—ªçƒ
 		{
 			ledCount = 0;
-			LED1_BLINK;	//LED1»ÆµÆÉÁË¸
+			LED1_BLINK;	//LED1é»„ç¯é—ªçƒ
 			RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
 			RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
 
-			//Èç¹ûÈÕÆÚ·¢Éú±ä»¯£¬ÔòÇå³ıÉ¨Ãè´ÎÊı
+			//å¦‚æœæ—¥æœŸå‘ç”Ÿå˜åŒ–ï¼Œåˆ™æ¸…é™¤æ‰«ææ¬¡æ•°
 			if (Scan_Times != 0)
 			{
 				if (RTC_DateStruct.RTC_Date != Scan_Day)
 				{
-					Scan_Times = 0;	//µ±ÈÕÉ¨Ãè´ÎÊı
+					Scan_Times = 0;	//å½“æ—¥æ‰«ææ¬¡æ•°
 				}
 			}
 		}
 
-		////2-´®¿Ú×ªWIFIÍ¨ĞÅÄ£¿é£¬³¬Ê±ÔòÒ»´ÎÊı¾İ½ÓÊÕÇ¿ÖÆ½áÊø
+		////2-ä¸²å£è½¬WIFIé€šä¿¡æ¨¡å—ï¼Œè¶…æ—¶åˆ™ä¸€æ¬¡æ•°æ®æ¥æ”¶å¼ºåˆ¶ç»“æŸ
 		//if(Usart2_receive_on)
 		//{
 		//	Usart2_receive_timer++;
@@ -82,7 +82,7 @@ void TIM3_IRQHandler(void)
 		//	}
 		//}
 		//
-		////3-ÒÔÌ«ÍøÍ¨ĞÅÄ£¿é£¬³¬Ê±ÔòÒ»´ÎÊı¾İ½ÓÊÕÇ¿ÖÆ½áÊø
+		////3-ä»¥å¤ªç½‘é€šä¿¡æ¨¡å—ï¼Œè¶…æ—¶åˆ™ä¸€æ¬¡æ•°æ®æ¥æ”¶å¼ºåˆ¶ç»“æŸ
 		//if(Uart5_receive_on)
 		//{
 		//	Uart5_receive_timer++;
@@ -95,5 +95,5 @@ void TIM3_IRQHandler(void)
 		//}
 
 	}
-	TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //Çå³ıÖĞ¶Ï±êÖ¾Î»
+	TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½
 }

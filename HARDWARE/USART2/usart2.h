@@ -3,12 +3,12 @@
 #include "stm32f4xx_conf.h"
 #include "sys.h" 
 
-#define USART2_REC_LEN  			100  	//¶¨Òå×î´ó½ÓÊÕ×Ö½ÚÊı
-//extern uint8_t  Usart2_rcv_flag;		//´®¿Ú2½ÓÊÕµ½Êı¾İ
-extern u8  USART2_RX_BUF[USART2_REC_LEN];   //½ÓÊÕ»º³å 
+#define USART2_REC_LEN  			100  	//å®šä¹‰æœ€å¤§æ¥æ”¶å­—èŠ‚æ•°
+//extern uint8_t  Usart2_rcv_flag;		//ä¸²å£2æ¥æ”¶åˆ°æ•°æ®
+extern u8  USART2_RX_BUF[USART2_REC_LEN];   //æ¥æ”¶ç¼“å†² 
 extern u8 USART2_BUF_Index; 
 void usart2_init(u32 bound);
-void usart2_send_byte(uint8_t ch);				//´®¿Ú2·¢ËÍº¯Êı
+void usart2_send_byte(uint8_t ch);				//ä¸²å£2å‘é€å‡½æ•°
 	
 #endif
 

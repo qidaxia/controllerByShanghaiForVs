@@ -3,11 +3,11 @@
 #include "stm32f4xx_conf.h"
 #include "sys.h" 
 
-#define USART1_REC_LEN  			20  	//¶¨Òå×î´ó½ÓÊÕ×Ö½ÚÊı 20
+#define USART1_REC_LEN  			20  	//å®šä¹‰æœ€å¤§æ¥æ”¶å­—èŠ‚æ•° 20
 
-extern u8  USART1_RX_BUF[USART1_REC_LEN];   //½ÓÊÕ»º³å
+extern u8  USART1_RX_BUF[USART1_REC_LEN];   //æ¥æ”¶ç¼“å†²
 void usart1_init(u32 bound);
-void usart1_send_byte(uint8_t ch);			//´®¿Ú1·¢ËÍ
+void usart1_send_byte(uint8_t ch);			//ä¸²å£1å‘é€
 
 #endif
 

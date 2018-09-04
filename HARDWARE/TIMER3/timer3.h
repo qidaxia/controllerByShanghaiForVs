@@ -2,17 +2,17 @@
 #define _TIMER3_H
 #include "sys.h"
 
-#define	COMM_TIMEOUT	5		//5msÍ¨ĞÅ³¬Ê±
+#define	COMM_TIMEOUT	5		//5msé€šä¿¡è¶…æ—¶
 
-extern uint16_t ledCount;			//ÉÁË¸¶ş¼«¹Ü¶¨Ê±Æ÷
+extern uint16_t ledCount;			//é—ªçƒäºŒæç®¡å®šæ—¶å™¨
 
-extern uint8_t  Usart2_rcv_flag;			//´®¿Ú2½ÓÊÕµ½Êı¾İ
-extern uint16_t Usart2_receive_timer;	//´®¿Ú2½ÓÊÕ³¬Ê±¶¨Ê±Æ÷
-extern uint8_t  Usart2_receive_on;		//´®¿Ú2½ÓÊÕ¶¨Ê±¿ª¹Ø
+extern uint8_t  Usart2_rcv_flag;			//ä¸²å£2æ¥æ”¶åˆ°æ•°æ®
+extern uint16_t Usart2_receive_timer;	//ä¸²å£2æ¥æ”¶è¶…æ—¶å®šæ—¶å™¨
+extern uint8_t  Usart2_receive_on;		//ä¸²å£2æ¥æ”¶å®šæ—¶å¼€å…³
 
-extern uint8_t  Uart5_rcv_flag;			  //´®¿Ú5½ÓÊÕµ½Êı¾İ
-extern uint16_t Uart5_receive_timer;	//´®¿Ú5½ÓÊÕ³¬Ê±¶¨Ê±Æ÷
-extern uint8_t  Uart5_receive_on;		  //´®¿Ú5½ÓÊÕ¶¨Ê±¿ª¹Ø
+extern uint8_t  Uart5_rcv_flag;			  //ä¸²å£5æ¥æ”¶åˆ°æ•°æ®
+extern uint16_t Uart5_receive_timer;	//ä¸²å£5æ¥æ”¶è¶…æ—¶å®šæ—¶å™¨
+extern uint8_t  Uart5_receive_on;		  //ä¸²å£5æ¥æ”¶å®šæ—¶å¼€å…³
 
 void TIM3_Int_Init(u16 arr,u16 psc);
 

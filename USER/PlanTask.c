@@ -12,7 +12,7 @@
 #include "toSensor.h"
 
 
-/* ÇóÕûĞÍÊı¾ø¶ÔÖµ */
+/* æ±‚æ•´å‹æ•°ç»å¯¹å€¼ */
 static uint32_t abs_int(uint32_t a, uint32_t b)
 {
 	if (a >= b)
@@ -20,7 +20,7 @@ static uint32_t abs_int(uint32_t a, uint32_t b)
 	else
 		return b - a;
 }
-/* ÅĞ¶ÏÊÇ·ñµ½´ïÖ¸¶¨Î»ÖÃ */
+/* åˆ¤æ–­æ˜¯å¦åˆ°è¾¾æŒ‡å®šä½ç½® */
 static uint8_t deviceInThere(uint32_t ID, uint32_t there)
 {
 	MOVECMD dir;
@@ -37,17 +37,17 @@ static uint8_t deviceInThere(uint32_t ID, uint32_t there)
 				return 1;
 			}
 			else
-				return 0;	//¾àÀëÔ¶
+				return 0;	//è·ç¦»è¿œ
 		}
 		else
-			return 0;	//²»ÊÇ¾²Ö¹×´Ì¬
+			return 0;	//ä¸æ˜¯é™æ­¢çŠ¶æ€
 	}
 	else
-		return 0;	//Í¨ĞÅÎÊÌâ
+		return 0;	//é€šä¿¡é—®é¢˜
 }
 
 
-/* ÅĞ¶ÏÒ»¸öÊ±¿ÌCÊÇ·ñÎ»ÓÚAºÍBÖ®¼ä */
+/* åˆ¤æ–­ä¸€ä¸ªæ—¶åˆ»Cæ˜¯å¦ä½äºAå’ŒBä¹‹é—´ */
 static uint8_t CompareTime(uint8_t A_Hour, uint8_t A_Minute, uint8_t B_Hour, uint8_t B_Minute, uint8_t C_Hour, uint8_t C_Minute)
 {
 	uint16_t A = 0, B = 0, C = 0;
@@ -61,7 +61,7 @@ static uint8_t CompareTime(uint8_t A_Hour, uint8_t A_Minute, uint8_t B_Hour, uin
 }
 
 /* -----------------------------------------------------------------------------
-ÅĞ¶Ï¼ì²âÊ±¼äÊÇ·ñµ½´ï
+åˆ¤æ–­æ£€æµ‹æ—¶é—´æ˜¯å¦åˆ°è¾¾
 ----------------------------------------------------------------------------- */
 static uint16_t ScanNextTimes(void)
 {
@@ -69,7 +69,7 @@ static uint16_t ScanNextTimes(void)
 	uint8_t scan_flag;
 
 	scan_flag = 0;
-	if (Scan_Times == 0)	//1-ÅĞ¶Ïµ±Ç°Ê±¼äÊÇ·ñ´óÓÚÆğÊ¼Ê±¼ä£¬Ğ¡ÓÚ½áÊøÊ±¼ä
+	if (Scan_Times == 0)	//1-åˆ¤æ–­å½“å‰æ—¶é—´æ˜¯å¦å¤§äºèµ·å§‹æ—¶é—´ï¼Œå°äºç»“æŸæ—¶é—´
 	{
 		if (CompareTime(scanStartTime.Hour, scanStartTime.Minute,
 			scanStopTime.Hour, scanStopTime.Minute,
@@ -78,7 +78,7 @@ static uint16_t ScanNextTimes(void)
 		else
 			return 0;
 	}
-	else	//2-ÅĞ¶Ïµ±Ç°Ê±¼äÊÇ·ñ´óÓÚÏÂ´ÎÉ¨ÃèÊ±¼ä£¬Æô¶¯É¨Ãè
+	else	//2-åˆ¤æ–­å½“å‰æ—¶é—´æ˜¯å¦å¤§äºä¸‹æ¬¡æ‰«ææ—¶é—´ï¼Œå¯åŠ¨æ‰«æ
 	{
 		if (CompareTime(nextScanTime.Hour, nextScanTime.Minute,
 			scanStopTime.Hour, scanStopTime.Minute,
@@ -90,11 +90,11 @@ static uint16_t ScanNextTimes(void)
 
 	if (scan_flag)
 	{
-		if (Scan_Part())//Æô¶¯É¨Ãè
+		if (Scan_Part())//å¯åŠ¨æ‰«æ
 		{
-			Scan_Day = RTC_DateStruct.RTC_Date;	//µ±ÈÕÉ¨ÃèÈÕÆÚ
-			Scan_Times++;											//¼ÇÂ¼É¨Ãè´ÎÊı
-			nextScanTime.Hour = RTC_TimeStruct.RTC_Hours;	//¼ÇÂ¼ÏÂ´ÎÉ¨ÃèÊ±¼ä		
+			Scan_Day = RTC_DateStruct.RTC_Date;	//å½“æ—¥æ‰«ææ—¥æœŸ
+			Scan_Times++;											//è®°å½•æ‰«ææ¬¡æ•°
+			nextScanTime.Hour = RTC_TimeStruct.RTC_Hours;	//è®°å½•ä¸‹æ¬¡æ‰«ææ—¶é—´		
 			t = RTC_TimeStruct.RTC_Minutes + Scan_Interval;
 			t_hour = t / 60;
 			t_minute = t % 60;
@@ -113,7 +113,7 @@ static uint16_t ScanNextTimes(void)
 }
 
 /* -----------------------------------------------------------------------------
-ÇøÓòÉ¨ÃèÒ»´Î
+åŒºåŸŸæ‰«æä¸€æ¬¡
 ----------------------------------------------------------------------------- */
 static uint8_t ScanOneTimes(void)
 {
@@ -122,11 +122,11 @@ static uint8_t ScanOneTimes(void)
 		scanStopTime.Hour, scanStopTime.Minute,
 		RTC_TimeStruct.RTC_Hours, RTC_TimeStruct.RTC_Minutes))
 	{
-		if (Scan_Part())//Æô¶¯É¨Ãè
+		if (Scan_Part())//å¯åŠ¨æ‰«æ
 		{
 			scanRepeatStyle = noneRepeat;
 			wr_buf[0] = (uint8_t)scanRepeatStyle;
-			write_to_backup_sram(wr_buf, 1, 76); //¸ü¸Ä±£´æRAMÈÎÎñÖØ¸´·½Ê½
+			write_to_backup_sram(wr_buf, 1, 76); //æ›´æ”¹ä¿å­˜RAMä»»åŠ¡é‡å¤æ–¹å¼
 			return 1;
 		}
 		else
@@ -137,26 +137,26 @@ static uint8_t ScanOneTimes(void)
 }
 
 /* -----------------------------------------------------------------------------
-´óÁººÍĞ¡³µ»Ø¹éÔ­µã
+å¤§æ¢å’Œå°è½¦å›å½’åŸç‚¹
 -----------------------------------------------------------------------------  */
 static uint8_t XYgoZero(void)
 {
 	uint8_t i, j;
 	PCBreakFlag = 0;
-	//1-Ğ¡³µºÍ´óÁº¹éÁã
-	DebugMsg("·¢ËÍĞ¡³µºÍ´óÁº¹éÔ­µãÖ¸Áî\r\n");
+	//1-å°è½¦å’Œå¤§æ¢å½’é›¶
+	DebugMsg("å‘é€å°è½¦å’Œå¤§æ¢å½’åŸç‚¹æŒ‡ä»¤\r\n");
 	if (MotorToZero(ID_XIAOCHE) == 0)
 	{
-		DebugMsg("ºÍĞ¡³µÍ¨ĞÅÊ§°Ü\r\n");
+		DebugMsg("å’Œå°è½¦é€šä¿¡å¤±è´¥\r\n");
 		return 0;
 	}
 	if (MotorToZero(ID_DALIANG) == 0)
 	{
-		DebugMsg("ºÍ´óÁºÍ¨ĞÅÊ§°Ü\r\n");
+		DebugMsg("å’Œå¤§æ¢é€šä¿¡å¤±è´¥\r\n");
 		return 0;
 	}
-	//2-²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÁãµã
-	DebugMsg("²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÁãµã\r\n");
+	//2-æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾é›¶ç‚¹
+	DebugMsg("æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾é›¶ç‚¹\r\n");
 	i = (uint8_t)waitDeviceToThere(ID_XIAOCHE, 0);
 	j = (uint8_t)waitDeviceToThere(ID_DALIANG, 0);
 
@@ -164,21 +164,21 @@ static uint8_t XYgoZero(void)
 
 }
 
-//1:Õı³£ÍË³ö RET_OK
-//0£º³¬Ê±ÍË³ö RET_ERR
+//1:æ­£å¸¸é€€å‡º RET_OK
+//0ï¼šè¶…æ—¶é€€å‡º RET_ERR
 extern RETCODE waitDeviceToThere(uint32_t ID, uint32_t des)
 {
 	uint32_t timeout = 0;
 	uint32_t waitTime;
 	waitTime = ID == ID_DALIANG ? DALIANG_TIMEOUT : XIAOCHE_TIMEOUT;
 
-	while (1)//µÈ´ı
+	while (1)//ç­‰å¾…
 	{
 		if (pcCheck(wifi) && PCBreakFlag)
 		{
 			MotorMove(ID_XIAOCHE, stop);
 			MotorMove(ID_DALIANG, stop);
-			DebugMsg("ÉÏÎ»»úÖÕÖ¹\r\n");
+			DebugMsg("ä¸Šä½æœºç»ˆæ­¢\r\n");
 			return RET_ERR;
 		}
 		delay_ms(20);
@@ -189,9 +189,9 @@ extern RETCODE waitDeviceToThere(uint32_t ID, uint32_t des)
 			{
 				break;
 			}
-			if (timeout > waitTime * 50)	//³¬Ê±ÍË³ö 600/60=10min
+			if (timeout > waitTime * 50)	//è¶…æ—¶é€€å‡º 600/60=10min
 			{
-				DebugMsg("µÈ´ı³¬Ê±\r\n");
+				DebugMsg("ç­‰å¾…è¶…æ—¶\r\n");
 				return RET_ERR;
 			}
 		}
@@ -200,21 +200,21 @@ extern RETCODE waitDeviceToThere(uint32_t ID, uint32_t des)
 }
 
 /* -----------------------------------------------------------------------------
-ÅĞ¶ÏÉ¨Ãè¼Æ»®ÈÎÎñ
+åˆ¤æ–­æ‰«æè®¡åˆ’ä»»åŠ¡
 ----------------------------------------------------------------------------- */
 extern void PlanTask(void)
 {
 	switch (scanRepeatStyle)
 	{
-	case everyDay://Ã¿Ìì
+	case everyDay://æ¯å¤©
 		ScanNextTimes();
 		break;
 
-	case once://Ö»Ò»´Î
+	case once://åªä¸€æ¬¡
 		ScanOneTimes();
 		break;
 
-	case workDay://¹¤×÷ÈÕ£¨ÖÜÒ»ÖÁÖÜÎå£©
+	case workDay://å·¥ä½œæ—¥ï¼ˆå‘¨ä¸€è‡³å‘¨äº”ï¼‰
 		if ((RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Monday) ||
 			(RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Tuesday) ||
 			(RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Wednesday) ||
@@ -223,115 +223,115 @@ extern void PlanTask(void)
 			ScanNextTimes();
 		break;
 
-	case monday://ÖÜÒ»
+	case monday://å‘¨ä¸€
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Monday)
 			ScanNextTimes();
 		break;
 
-	case tuesday://ÖÜ¶ş
+	case tuesday://å‘¨äºŒ
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Tuesday)
 			ScanNextTimes();
 		break;
 
-	case wednesday://ÖÜÈı
+	case wednesday://å‘¨ä¸‰
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Wednesday)
 			ScanNextTimes();
 		break;
 
-	case thursday://ÖÜËÄ
+	case thursday://å‘¨å››
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Thursday)
 			ScanNextTimes();
 		break;
 
-	case friday://ÖÜÎå
+	case friday://å‘¨äº”
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Friday)
 			ScanNextTimes();
 		break;
 
-	case saturday://ÖÜÁù
+	case saturday://å‘¨å…­
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Saturday)
 			ScanNextTimes();
 		break;
 
-	case sunday://ÖÜÈÕ
+	case sunday://å‘¨æ—¥
 		if (RTC_DateStruct.RTC_WeekDay == RTC_Weekday_Sunday)
 			ScanNextTimes();
 		break;
 
-	case noneRepeat://²»É¨Ãè£¬Çå³ı×Ô¶¯É¨ÃèÈÎÎñ
+	case noneRepeat://ä¸æ‰«æï¼Œæ¸…é™¤è‡ªåŠ¨æ‰«æä»»åŠ¡
 
 		break;
 	}
 }
 
 /* -----------------------------------------------------------------------------
-È«ÃæÉ¨Ãè
+å…¨é¢æ‰«æ
 ----------------------------------------------------------------------------- */
 extern uint8_t Scan_Full(void)
 {
 	uint8_t  scan_row;
 
-	PCBreakFlag = 0;	//Çå³şPCÖÕÖ¹±êÖ¾
-	DebugMsg("¿ªÊ¼Ö´ĞĞÈ«ÃæÉ¨Ãè\r\n");
+	PCBreakFlag = 0;	//æ¸…æ¥šPCç»ˆæ­¢æ ‡å¿—
+	DebugMsg("å¼€å§‹æ‰§è¡Œå…¨é¢æ‰«æ\r\n");
 
 	if (XYgoZero())
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µã³É¹¦£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹æˆåŠŸï¼\r\n");
 	}
 	else
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µãÊ§°Ü£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹å¤±è´¥ï¼\r\n");
 		return 0;
 	}
 
-	//1-·¢ËÍ´óÁº»ØµÚÒ»ÁĞÖ¸Áî
-	DebugMsg("·¢ËÍ´óÁº»ØµÚÒ»ÁĞÖ¸Áî\r\n");
+	//1-å‘é€å¤§æ¢å›ç¬¬ä¸€åˆ—æŒ‡ä»¤
+	DebugMsg("å‘é€å¤§æ¢å›ç¬¬ä¸€åˆ—æŒ‡ä»¤\r\n");
 	if (MotorToPosition(ID_DALIANG, map.Column_First) == 0)
 		return 0;
 
-	//2-·¢ËÍĞ¡³µ»ØÆğÊ¼ĞĞ	Ö¸Áî
-	DebugMsg("·¢ËÍĞ¡³µ»ØÆğÊ¼ĞĞÖ¸Áî\r\n");
+	//2-å‘é€å°è½¦å›èµ·å§‹è¡Œ	æŒ‡ä»¤
+	DebugMsg("å‘é€å°è½¦å›èµ·å§‹è¡ŒæŒ‡ä»¤\r\n");
 	if (MotorToPosition(ID_XIAOCHE, map.Row[0]) == 0)
 		return 0;
 
-	//3-²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÖ¸¶¨Î»ÖÃ
-	DebugMsg("²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÖ¸¶¨Î»ÖÃ\r\n");
+	//3-æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾æŒ‡å®šä½ç½®
+	DebugMsg("æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾æŒ‡å®šä½ç½®\r\n");
 	if (waitDeviceToThere(ID_XIAOCHE, map.Row[0]) == RET_ERR || waitDeviceToThere(ID_DALIANG, map.Column_First) == RET_ERR)
 	{
 		return 0;
 	}
-	//¿ªÊ¼É¨Ãè
-	DebugMsg("¿ªÊ¼É¨Ãè\r\n");
+	//å¼€å§‹æ‰«æ
+	DebugMsg("å¼€å§‹æ‰«æ\r\n");
 	scan_row = 0;
 	while (scan_row < map.Plant_Row)
 	{
-		//4-Êä³ö5VĞÅºÅ
-		DebugMsg("Êä³ö5VĞÅºÅ\r\n");
+		//4-è¾“å‡º5Vä¿¡å·
+		DebugMsg("è¾“å‡º5Vä¿¡å·\r\n");
 		SetXiaoChe_5V_Level(paulseStyle);
 		delay_ms(1000);
-		//5-´óÁºÒÆ¶¯µ½×î´óÁĞ´¦
-		DebugMsg("´óÁºÒÆ¶¯ÖĞ....\r\n");
+		//5-å¤§æ¢ç§»åŠ¨åˆ°æœ€å¤§åˆ—å¤„
+		DebugMsg("å¤§æ¢ç§»åŠ¨ä¸­....\r\n");
 		MotorToPosition(ID_DALIANG, map.Column_Last);
 		if (waitDeviceToThere(ID_DALIANG, map.Column_Last) == RET_ERR)
 		{
 			return 0;
 		}
-		//6-¹Ø±Õ5VĞÅºÅ
-		DebugMsg("¹Ø±Õ5VĞÅºÅ\r\n");
+		//6-å…³é—­5Vä¿¡å·
+		DebugMsg("å…³é—­5Vä¿¡å·\r\n");
 		SetXiaoChe_0V_Level();
 		delay_ms(1000);
-		//7-´óÁºÒÆ¶¯µ½ÆğÊ¼ÁĞ´¦
-		DebugMsg("´óÁºÒÆ¶¯µ½ÆğÊ¼ÁĞ´¦\r\n");
+		//7-å¤§æ¢ç§»åŠ¨åˆ°èµ·å§‹åˆ—å¤„
+		DebugMsg("å¤§æ¢ç§»åŠ¨åˆ°èµ·å§‹åˆ—å¤„\r\n");
 		MotorToPosition(ID_DALIANG, map.Column_First);
 		if (waitDeviceToThere(ID_DALIANG, map.Column_First) == RET_ERR)
 		{
 			return 0;
 		}
-		//8-Ğ¡³µÒÆ¶¯µ½ÏÂÒ»ĞĞ
+		//8-å°è½¦ç§»åŠ¨åˆ°ä¸‹ä¸€è¡Œ
 		scan_row++;
-		if (scan_row < map.Plant_Row)	//Èç¹ûµ½´ï×î´óĞĞ£¬ÔòĞ¡³µ²»ÒÆ¶¯
+		if (scan_row < map.Plant_Row)	//å¦‚æœåˆ°è¾¾æœ€å¤§è¡Œï¼Œåˆ™å°è½¦ä¸ç§»åŠ¨
 		{
-			DebugMsg("Ğ¡³µÒÆ¶¯µ½ÏÂÒ»ĞĞ\r\n");
+			DebugMsg("å°è½¦ç§»åŠ¨åˆ°ä¸‹ä¸€è¡Œ\r\n");
 			MotorToPosition(ID_XIAOCHE, map.Row[scan_row]);
 			if (waitDeviceToThere(ID_XIAOCHE, map.Row[scan_row]) == RET_ERR)
 			{
@@ -339,49 +339,49 @@ extern uint8_t Scan_Full(void)
 			}
 		}
 	}
-	DebugMsg("È«ÃæÉ¨Ãè³É¹¦Íê³É\r\n");
+	DebugMsg("å…¨é¢æ‰«ææˆåŠŸå®Œæˆ\r\n");
 	BeepThree();
 	return 1;
 }
 
 /* -----------------------------------------------------------------------------
-ÇøÓòÉ¨Ãè
+åŒºåŸŸæ‰«æ
 ----------------------------------------------------------------------------- */
 extern uint8_t Scan_Part(void)
 {
 	uint32_t x;
 	uint8_t  i, j, k, m, rd_buf[40];
-	uint8_t scan_long, nowbyte;			//É¨Ãè×Ö½Ú¸öÊı
-	uint16_t scan_num;	//É¨Ãèµ½µÄÖ²Îï
+	uint8_t scan_long, nowbyte;			//æ‰«æå­—èŠ‚ä¸ªæ•°
+	uint16_t scan_num;	//æ‰«æåˆ°çš„æ¤ç‰©
 
-	PCBreakFlag = 0;	//Çå³şPCÖÕÖ¹±êÖ¾
-	DebugMsg("¿ªÊ¼Ö´ĞĞÇøÓòÉ¨ÃèÈÎÎñ\r\n");
+	PCBreakFlag = 0;	//æ¸…æ¥šPCç»ˆæ­¢æ ‡å¿—
+	DebugMsg("å¼€å§‹æ‰§è¡ŒåŒºåŸŸæ‰«æä»»åŠ¡\r\n");
 
-	//2-»Ø¹éÔ­µã
+	//2-å›å½’åŸç‚¹
 	if (XYgoZero())
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µã³É¹¦£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹æˆåŠŸï¼\r\n");
 	}
 	else
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µãÊ§°Ü£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹å¤±è´¥ï¼\r\n");
 		return 0;
 	}
 
-	//3-¿ªÊ¼É¨Ãè
-	DebugMsg("¿ªÊ¼ÖğĞĞÉ¨Ãè\r\n");
-	for (i = 0; i < map.Plant_Row; i++)		//ÖğĞĞÉ¨Ãè
+	//3-å¼€å§‹æ‰«æ
+	DebugMsg("å¼€å§‹é€è¡Œæ‰«æ\r\n");
+	for (i = 0; i < map.Plant_Row; i++)		//é€è¡Œæ‰«æ
 	{
-		//4-Ğ¡³µÒÆ¶¯µ½É¨ÃèĞĞ
-		DebugMsg("Ğ¡³µÒÆ¶¯µ½µÚ "); 	DebugNum(i + 1); DebugMsg(" ĞĞ,");
-		DebugMsg("   Ä¿±ê×ø±ê£º"); 	DebugNum(map.Row[i]); DebugMsg("\r\n");
+		//4-å°è½¦ç§»åŠ¨åˆ°æ‰«æè¡Œ
+		DebugMsg("å°è½¦ç§»åŠ¨åˆ°ç¬¬ "); 	DebugNum(i + 1); DebugMsg(" è¡Œ,");
+		DebugMsg("   ç›®æ ‡åæ ‡ï¼š"); 	DebugNum(map.Row[i]); DebugMsg("\r\n");
 		MotorToPosition(ID_XIAOCHE, map.Row[i]);
 		if (waitDeviceToThere(ID_XIAOCHE, map.Row[i]) == RET_ERR)
 		{
 			return 0;
 		}
 
-		//5-¶ÁÈ¡É¨ÃèÎ»Í¼
+		//5-è¯»å–æ‰«æä½å›¾
 		for (m = 0; m < 40; m++) rd_buf[m] = 0;
 		read_from_backup_sram(rd_buf, 40, 100 + 40 * i);
 		scan_long = rd_buf[0];
@@ -391,152 +391,152 @@ extern uint8_t Scan_Part(void)
 			nowbyte = rd_buf[j + 1];
 			for (k = 0; k < 8; k++)
 			{
-				if (nowbyte & 0x01)	//¶ÔÓ¦Î»Îª1ÔòÒÆ¶¯µ½¸ÃÁĞ£¬²¢Í£Áô£¬¸ø³öÌáÊ¾ĞÅºÅ
+				if (nowbyte & 0x01)	//å¯¹åº”ä½ä¸º1åˆ™ç§»åŠ¨åˆ°è¯¥åˆ—ï¼Œå¹¶åœç•™ï¼Œç»™å‡ºæç¤ºä¿¡å·
 				{
-					//6-´óÁºÒÆ¶¯µ½±êÖ¾ÁĞ
+					//6-å¤§æ¢ç§»åŠ¨åˆ°æ ‡å¿—åˆ—
 					x = map.Column_First + map.Column_Interval*(8 * j + k);
-					DebugMsg("´óÁºÒÆ¶¯Ä¿±ê£º "); DebugNum(x); DebugMsg("\r\n");
+					DebugMsg("å¤§æ¢ç§»åŠ¨ç›®æ ‡ï¼š "); DebugNum(x); DebugMsg("\r\n");
 					MotorToPosition(ID_DALIANG, x);
 					if (waitDeviceToThere(ID_DALIANG, x) == RET_ERR)
 					{
 						return 0;
 					}
-					//7-¸ø³ö5VĞÅºÅ²¢µÈ´ı
-					DebugMsg("ÕÒµ½É¨ÃèµãÎ»\r\n");
+					//7-ç»™å‡º5Vä¿¡å·å¹¶ç­‰å¾…
+					DebugMsg("æ‰¾åˆ°æ‰«æç‚¹ä½\r\n");
 					SetXiaoChe_5V_Level(paulseStyle);
 					delay_ms(CAMERATIME);
 					SetXiaoChe_0V_Level();
 					scan_num++;
-					DebugMsg("±¾ĞĞÒÑÉ¨ÃèÄ¿±ê ");
+					DebugMsg("æœ¬è¡Œå·²æ‰«æç›®æ ‡ ");
 					DebugNum(scan_num);
-					DebugMsg(" ¸ö\r\n");
+					DebugMsg(" ä¸ª\r\n");
 				}
 				nowbyte >>= 1;
 			}
 		}
 	}
 
-	//8-É¨ÃèÍê±Ï£¬ÏìÈıÉù
-	DebugMsg("ÇøÓòÉ¨ÃèÍê³É\r\n");
+	//8-æ‰«æå®Œæ¯•ï¼Œå“ä¸‰å£°
+	DebugMsg("åŒºåŸŸæ‰«æå®Œæˆ\r\n");
 	BeepThree();
 	return 1;
 }
 
 /* -----------------------------------------------------------------------------
-É¨ÃèÖ¸¶¨ĞĞ
+æ‰«ææŒ‡å®šè¡Œ
 ----------------------------------------------------------------------------- */
 extern uint8_t Scan_Row(uint8_t scan_row)
 {
 
 
-	PCBreakFlag = 0;	//Çå³şPCÖÕÖ¹±êÖ¾
-	DebugMsg("É¨ÃèÖ¸¶¨ĞĞÈÎÎñ\r\n");
-	//»Ø¹éÔ­µã
+	PCBreakFlag = 0;	//æ¸…æ¥šPCç»ˆæ­¢æ ‡å¿—
+	DebugMsg("æ‰«ææŒ‡å®šè¡Œä»»åŠ¡\r\n");
+	//å›å½’åŸç‚¹
 	if (XYgoZero())
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µã³É¹¦£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹æˆåŠŸï¼\r\n");
 	}
 	else
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µãÊ§°Ü£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹å¤±è´¥ï¼\r\n");
 		return 0;
 	}
 
-	//1-·¢ËÍ´óÁº»ØÆğÊ¼ÁĞÖ¸Áî
-	DebugMsg("·¢ËÍ´óÁº»ØÆğÊ¼ÁĞÖ¸Áî\r\n");
+	//1-å‘é€å¤§æ¢å›èµ·å§‹åˆ—æŒ‡ä»¤
+	DebugMsg("å‘é€å¤§æ¢å›èµ·å§‹åˆ—æŒ‡ä»¤\r\n");
 	if (MotorToPosition(ID_DALIANG, map.Column_First) == 0)
 		return 0;
 
-	//2-·¢ËÍĞ¡³µ»ØÆğÊ¼ĞĞÖ¸Áî
-	DebugMsg("·¢ËÍĞ¡³µµ½´ïµÚ"); DebugNum(scan_row); DebugMsg("ĞĞÖ¸Áî\r\n");
+	//2-å‘é€å°è½¦å›èµ·å§‹è¡ŒæŒ‡ä»¤
+	DebugMsg("å‘é€å°è½¦åˆ°è¾¾ç¬¬"); DebugNum(scan_row); DebugMsg("è¡ŒæŒ‡ä»¤\r\n");
 	if (MotorToPosition(ID_XIAOCHE, map.Row[scan_row - 1]) == 0)
 		return 0;
 
-	//3-²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÖ¸¶¨Î»ÖÃ
-	DebugMsg("²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÖ¸¶¨Î»ÖÃ\r\n");
+	//3-æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾æŒ‡å®šä½ç½®
+	DebugMsg("æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾æŒ‡å®šä½ç½®\r\n");
 
 	if (waitDeviceToThere(ID_XIAOCHE, map.Row[scan_row - 1]) == RET_ERR || waitDeviceToThere(ID_DALIANG, map.Column_First) == RET_ERR)
 	{
 		return 0;
 	}
 
-	//4-Êä³ö5VĞÅºÅ
-	DebugMsg("Êä³ö5VĞÅºÅ\r\n");
+	//4-è¾“å‡º5Vä¿¡å·
+	DebugMsg("è¾“å‡º5Vä¿¡å·\r\n");
 	SetXiaoChe_5V_Level(paulseStyle);
 	delay_ms(1000);
 
-	//5-´óÁºÒÆ¶¯µ½×î´óÁĞ´¦
-	DebugMsg("´óÁºÒÆ¶¯ÖĞ....\r\n");
+	//5-å¤§æ¢ç§»åŠ¨åˆ°æœ€å¤§åˆ—å¤„
+	DebugMsg("å¤§æ¢ç§»åŠ¨ä¸­....\r\n");
 	MotorToPosition(ID_DALIANG, map.Column_Last);
 	if (waitDeviceToThere(ID_DALIANG, map.Column_Last) == RET_ERR)
 	{
 		return 0;
 	}
 
-	//6-¹Ø±Õ5VĞÅºÅ
-	DebugMsg("¹Ø±Õ5VĞÅºÅ\r\n");
+	//6-å…³é—­5Vä¿¡å·
+	DebugMsg("å…³é—­5Vä¿¡å·\r\n");
 	SetXiaoChe_0V_Level();
 	delay_ms(1000);
 
-	DebugMsg("É¨ÃèÖ¸¶¨ĞĞÈÎÎñÍê³É\r\n");
+	DebugMsg("æ‰«ææŒ‡å®šè¡Œä»»åŠ¡å®Œæˆ\r\n");
 	BeepThree();
 	return 1;
 }
 
 /* -----------------------------------------------------------------------------
-É¨ÃèÖ¸¶¨ÁĞ
+æ‰«ææŒ‡å®šåˆ—
 ----------------------------------------------------------------------------- */
 extern uint8_t Scan_Column(uint16_t scan_column)
 {
 	uint32_t  column_position;
 
-	PCBreakFlag = 0;	//Çå³şPCÖÕÖ¹±êÖ¾
-	DebugMsg("É¨ÃèÖ¸¶¨ÁĞ¿ªÊ¼\r\n");
-	//»Ø¹éÔ­µã
+	PCBreakFlag = 0;	//æ¸…æ¥šPCç»ˆæ­¢æ ‡å¿—
+	DebugMsg("æ‰«ææŒ‡å®šåˆ—å¼€å§‹\r\n");
+	//å›å½’åŸç‚¹
 	if (XYgoZero())
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µã³É¹¦£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹æˆåŠŸï¼\r\n");
 	}
 	else
 	{
-		DebugMsg("Ğ¡³µºÍ´óÁº»Ø¹éÔ­µãÊ§°Ü£¡\r\n");
+		DebugMsg("å°è½¦å’Œå¤§æ¢å›å½’åŸç‚¹å¤±è´¥ï¼\r\n");
 		return 0;
 	}
-	//1-·¢ËÍ´óÁº»ØÖ¸¶¨ÁĞÖ¸Áî
-	DebugMsg("·¢ËÍ´óÁºµ½´ïµÚ"); DebugNum(scan_column); DebugMsg("ÁĞÖ¸Áî\r\n");
+	//1-å‘é€å¤§æ¢å›æŒ‡å®šåˆ—æŒ‡ä»¤
+	DebugMsg("å‘é€å¤§æ¢åˆ°è¾¾ç¬¬"); DebugNum(scan_column); DebugMsg("åˆ—æŒ‡ä»¤\r\n");
 	column_position = map.Column_First + map.Column_Interval*(scan_column - 1);
 	if (MotorToPosition(ID_DALIANG, column_position) == 0)return 0;
 
-	//2-·¢ËÍĞ¡³µ»ØÆğÊ¼ĞĞÖ¸Áî
-	DebugMsg("·¢ËÍĞ¡³µµ½´ïÆğÊ¼ĞĞÖ¸Áî\r\n");
+	//2-å‘é€å°è½¦å›èµ·å§‹è¡ŒæŒ‡ä»¤
+	DebugMsg("å‘é€å°è½¦åˆ°è¾¾èµ·å§‹è¡ŒæŒ‡ä»¤\r\n");
 	if (MotorToPosition(ID_XIAOCHE, map.Row[0]) == 0)return 0;
 
-	//3-²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÖ¸¶¨Î»ÖÃ
-	DebugMsg("²éÑ¯µÈ´ı´óÁººÍĞ¡³µµ½´ïÖ¸¶¨Î»ÖÃ\r\n");
+	//3-æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾æŒ‡å®šä½ç½®
+	DebugMsg("æŸ¥è¯¢ç­‰å¾…å¤§æ¢å’Œå°è½¦åˆ°è¾¾æŒ‡å®šä½ç½®\r\n");
 	if (waitDeviceToThere(ID_XIAOCHE, map.Row[0]) == RET_ERR || waitDeviceToThere(ID_DALIANG, column_position) == RET_ERR)
 	{
 		return 0;
 	}
 
-	//4-Êä³ö5VĞÅºÅ
-	DebugMsg("Êä³ö5VĞÅºÅ\r\n");
+	//4-è¾“å‡º5Vä¿¡å·
+	DebugMsg("è¾“å‡º5Vä¿¡å·\r\n");
 	SetXiaoChe_5V_Level(paulseStyle);
 	delay_ms(1000);
 
-	//5-Ğ¡³µÒÆ¶¯µ½×î´óĞĞ´¦
-	DebugMsg("Ğ¡³µÒÆ¶¯ÖĞ....\r\n");
+	//5-å°è½¦ç§»åŠ¨åˆ°æœ€å¤§è¡Œå¤„
+	DebugMsg("å°è½¦ç§»åŠ¨ä¸­....\r\n");
 	MotorToPosition(ID_XIAOCHE, map.Row[map.Plant_Row - 1]);
 
 	if (waitDeviceToThere(ID_XIAOCHE, map.Row[map.Plant_Row - 1]) == RET_ERR)
 	{
 		return 0;
 	}
-	//6-¹Ø±Õ5VĞÅºÅ
-	DebugMsg("¹Ø±Õ5VĞÅºÅ\r\n");
+	//6-å…³é—­5Vä¿¡å·
+	DebugMsg("å…³é—­5Vä¿¡å·\r\n");
 	SetXiaoChe_0V_Level();
 	delay_ms(1000);
 
-	DebugMsg("É¨ÃèÖ¸¶¨ÁĞÈÎÎñÍê³É£¡\r\n");
+	DebugMsg("æ‰«ææŒ‡å®šåˆ—ä»»åŠ¡å®Œæˆï¼\r\n");
 	BeepThree();
 	return 1;
 }

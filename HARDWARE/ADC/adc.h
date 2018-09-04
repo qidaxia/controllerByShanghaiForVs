@@ -2,9 +2,9 @@
 #define __ADC_H	
 #include "sys.h" 
  							   
-void Adc_Init(void); 				//ADCÍ¨µÀ³õÊ¼»¯
-u16  Get_Adc(u8 ch); 				//»ñµÃÄ³¸öÍ¨µÀÖµ 
-u16 Get_Adc_Average(u8 ch,u8 times);//µÃµ½Ä³¸öÍ¨µÀ¸ø¶¨´ÎÊı²ÉÑùµÄÆ½¾ùÖµ
+void Adc_Init(void); 				//ADCé€šé“åˆå§‹åŒ–
+u16  Get_Adc(u8 ch); 				//è·å¾—æŸä¸ªé€šé“å€¼ 
+u16 Get_Adc_Average(u8 ch,u8 times);//å¾—åˆ°æŸä¸ªé€šé“ç»™å®šæ¬¡æ•°é‡‡æ ·çš„å¹³å‡å€¼
 
 #endif 
 

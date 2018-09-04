@@ -12,7 +12,7 @@
 
 static void LoraWait(void)
 {
-	LED2_ON;        //À¶µÆÉÁË¸Ò»´Î
+	LED2_ON;        //è“ç¯é—ªçƒä¸€æ¬¡
 	delay_ms(100);
 	LED2_OFF;
 }
@@ -75,7 +75,7 @@ extern RETCODE MotorToPosition(uint8_t ID, uint32_t pos)
 	send_buf[12] = check;
 
 	send_times = 5;
-	while (send_times--)		//³¬Ê±»òÊÕµ½´íÎóÊ±£¬ÖØ·¢5´Î
+	while (send_times--)		//è¶…æ—¶æˆ–æ”¶åˆ°é”™è¯¯æ—¶ï¼Œé‡å‘5æ¬¡
 	{
 		LoraWait();
 		clearReciveBuf(lora);
@@ -153,10 +153,10 @@ extern RETCODE ReadStatus(uint8_t ID)
 	if (dataPtr != (void *)0)
 	{
 		check = *(dataPtr + 1) + *(dataPtr + 2) + *(dataPtr + 3);
-		if (check == *(dataPtr + 4))	//ÅĞ¶ÏĞ£Ñé
+		if (check == *(dataPtr + 4))	//åˆ¤æ–­æ ¡éªŒ
 		{
 			dir = (MOVECMD)(*dataPtr);
-			pos = (*(dataPtr + 1)) - 1;		//×î¸ßÎ»+1£¬±ÜÃâ·¢ËÍ0Ê±Ä£¿éÈİÒ×¶ªÊ§
+			pos = (*(dataPtr + 1)) - 1;		//æœ€é«˜ä½+1ï¼Œé¿å…å‘é€0æ—¶æ¨¡å—å®¹æ˜“ä¸¢å¤±
 			pos <<= 8;
 			pos += (*(dataPtr + 2));
 			pos <<= 8;
@@ -176,34 +176,34 @@ extern RETCODE ReadStatus(uint8_t ID)
 			{
 				goto OK;
 			}
-			/* ·¢ËÍĞ¡³µºÍ´óÁºÎ»ÖÃ */
-			DebugMsg("Ğ¡³µ×´Ì¬£º");
+			/* å‘é€å°è½¦å’Œå¤§æ¢ä½ç½® */
+			DebugMsg("å°è½¦çŠ¶æ€ï¼š");
 			switch (XiaoChe_Now_Direction)
 			{
 			case 1:
-				DebugMsg("Ç°½ø£¬×ø±ê£º");
+				DebugMsg("å‰è¿›ï¼Œåæ ‡ï¼š");
 				break;
 			case 2:
-				DebugMsg("ºóÍË£¬×ø±ê£º");
+				DebugMsg("åé€€ï¼Œåæ ‡ï¼š");
 				break;
 			case 3:
-				DebugMsg("¾²Ö¹£¬×ø±ê£º");
+				DebugMsg("é™æ­¢ï¼Œåæ ‡ï¼š");
 				break;
 			}
 			DebugNum(XiaoChe_Now_Position);
 			DebugMsg("\r\n");
 
-			DebugMsg("´óÁº×´Ì¬£º");
+			DebugMsg("å¤§æ¢çŠ¶æ€ï¼š");
 			switch (DaLiang_Now_Direction)
 			{
 			case 1:
-				DebugMsg("Ç°½ø£¬×ø±ê£º");
+				DebugMsg("å‰è¿›ï¼Œåæ ‡ï¼š");
 				break;
 			case 2:
-				DebugMsg("ºóÍË£¬×ø±ê£º");
+				DebugMsg("åé€€ï¼Œåæ ‡ï¼š");
 				break;
 			case 3:
-				DebugMsg("¾²Ö¹£¬×ø±ê£º");
+				DebugMsg("é™æ­¢ï¼Œåæ ‡ï¼š");
 				break;
 			}
 			DebugNum(DaLiang_Now_Position);
