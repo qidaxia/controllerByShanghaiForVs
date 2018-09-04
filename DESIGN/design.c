@@ -83,7 +83,7 @@ extern void DebugMsg(uint8_t *str)
 	{
 		return;
 	}
-	SendBuff(lora, cmdIdDebug, 3);
+	//SendBuff(lora, cmdIdDebug, 3);
 	while (*str != 0)
 	{
 		usart6_send_byte(*str);
@@ -97,7 +97,7 @@ extern void DebugNum(uint32_t num)
 	{
 		return;
 	}
-	SendBuff(lora, cmdIdDebug, 3);
+	//SendBuff(lora, cmdIdDebug, 3);
 	printf("%d", num);
 }
 
