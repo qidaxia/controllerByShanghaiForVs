@@ -2,6 +2,7 @@
 #define __USART6_H
 #include "stm32f4xx_conf.h"
 #include "sys.h"
+#include "stdio.h"
 
 #define USART6_RCV_LEN 30 //定义最大接收字节数 20
 
