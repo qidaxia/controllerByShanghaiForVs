@@ -54,7 +54,5 @@ int main(void)
 			PlanTask();
 		}
 		delay_ms(12); //不可修改
-
-		kkg();
 	}
 }
