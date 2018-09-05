@@ -2,6 +2,7 @@
     "files.associations": {
         "usart6.h": "c",
         "sys.h": "c",
-        "stm32f4xx.h": "c"
+        "stm32f4xx.h": "c",
+        "plantask.h": "c"
     }
 }
