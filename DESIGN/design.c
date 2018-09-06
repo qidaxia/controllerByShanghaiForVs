@@ -76,13 +76,22 @@ static void wifiSendBuff(u8 *buf, u8 len)
 		wifiSendB(*(buf + i));
 	}
 }
-
+static uint8_t strLen(uint8_t *str)
+{
+	uint8_t len = 0;
+	while (*str != (void *)0)
+	{
+		len++;
+	}
+	return len;
+}
 extern void DebugMsg(uint8_t *str)
 {
 	if (!DebugFlag)
 	{
 		return;
 	}
+	SendBuff(lora, cmdIdDebug, 3);
 	//SendBuff(lora, cmdIdDebug, 3);
 	while (*str != 0)
 	{

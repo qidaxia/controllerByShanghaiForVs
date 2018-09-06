@@ -14,10 +14,7 @@
 /* 求整型数绝对值 */
 static uint32_t abs_int(uint32_t a, uint32_t b)
 {
-	if (a >= b)
-		return a - b;
-	else
-		return b - a;
+	return a >= b ? (a - b) : (b - a);
 }
 /* 判断是否到达指定位置 */
 static uint8_t deviceInThere(uint32_t ID, uint32_t there)
@@ -369,6 +366,10 @@ extern uint8_t Scan_Part(void)
 	DebugMsg("Start scan column by column\r\n"); //开始逐行扫描
 	for (i = 0; i < map.Plant_Row; i++)			 //逐行扫描
 	{
+		if (PCBreakFlag)
+		{
+			return 0;
+		}
 		//4-小车移动到扫描行
 		DebugMsg("Car now position"); //小车移动到第
 		DebugNum(i + 1);
@@ -393,6 +394,10 @@ extern uint8_t Scan_Part(void)
 			nowbyte = rd_buf[j + 1];
 			for (k = 0; k < 8; k++)
 			{
+				if (PCBreakFlag)
+				{
+					return 0;
+				}
 				if (nowbyte & 0x01) //对应位为1则移动到该列，并停留，给出提示信号
 				{
 					//6-大梁移动到标志列
